@@ -1,0 +1,10 @@
+{
+ "compared_values": 100,
+ "max_relative_difference": {
+  "MASS": 1.2165607265238714e-06,
+  "TOTAL ENERGY": 9.452153176364747e-06,
+  "POTENTIAL ENSTROPHY": 0.00012717265442395968,
+  "GRIDPOINT HEIGHT": 2.111704335732074e-05
+ },
+ "note": "original: NCAR STSWM 2.0 test case 5 at T42, 32-bit Sun run shipped in stswm.tgz; this build: 64-bit gfortran"
+}

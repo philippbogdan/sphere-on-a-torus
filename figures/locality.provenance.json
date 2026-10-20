@@ -1,0 +1,281 @@
+{
+  "figure": "locality",
+  "wording": {
+    "title": "The poles no longer collapse the stable step",
+    "subtitle": "TC5 stability bisection, 50 simulated days",
+    "x_axis": "Torus width M (computed points = M squared)",
+    "y_axis": "Stable step / equatorial wave-crossing time",
+    "note_reach": "42 lattice points of reach per full step",
+    "note_cover": "Two computed points per unique sphere point",
+    "note_cones": "Four cone patches, each within 8 cells"
+  },
+  "source_data": {
+    "figure-pack/stable_step.csv": {
+      "sha256": "922a381184a70b8c2f3a3327014c9b5ac988ad37acca772f68b17c715ba54706"
+    },
+    "figure-pack/model.json": {
+      "sha256": "b11ef619c858939ef08638856c22e88e993e7a5b56b85c4ec5fc8dc050ce3a08"
+    }
+  },
+  "source_origin": "figure-pack/ is written by scripts/prepare_figures.py from the saved measurements in data/ (checked against data/manifest.json); no earlier plot was read",
+  "uncertainty": "none shown and none exists: values are deterministic measured errors or model outputs, not replicate estimates",
+  "columns_used": {
+    "m": "x position",
+    "r": "y position and value label"
+  },
+  "plotted_values": [
+    {
+      "M": 64,
+      "r": 2.449489742783178,
+      "label": "2.45"
+    },
+    {
+      "M": 128,
+      "r": 2.3161058239082206,
+      "label": "2.32"
+    },
+    {
+      "M": 256,
+      "r": 2.2521628237215423,
+      "label": "2.25"
+    }
+  ],
+  "r_definition": "r is the largest stable step from the TC5 bisection divided by the equatorial wave-crossing time.",
+  "r_denominator": "Equatorial spacing is from a lat-lon grid with the same computed-point count; wave speed is the initial maximum sqrt(gD) + |v|. Bisection tolerance is 2%.",
+  "annotation_sources": {
+    "42 lattice points of reach per full step": "model.json cost.reach = 42",
+    "Two computed points per unique sphere point": "accuracy.csv: torus_unique is exactly M squared / 2 at M = 144, 288 and 576",
+    "Four cone patches, each within 8 cells": "model.json cost.cone_R = 8 (also polarswe/configs.py CONE R=8); the count of four is the tetrahedral double cover's cone points and is not a column in the figure data"
+  },
+  "transformations": [
+    "r is plotted unchanged; value labels are r rounded to two decimals",
+    "x is log2 with ticks at the three tested widths; y is linear from 0 to 3",
+    "the connecting line only joins the three measured widths in order; it is not a fit or an interpolation claim"
+  ],
+  "encoding": {
+    "torus": "blue filled circles joined by a blue line"
+  },
+  "status": "deterministic stability bisection results; one value per width, no replicates, no interval",
+  "alt_text": "Line and point plot of the largest stable step divided by the equatorial wave-crossing time for torus widths M of 64, 128 and 256 in the TC5 case over 50 simulated days. The ratio is 2.45, 2.32 and 2.25: it stays bounded near 2.3 instead of collapsing as the grid refines, though it is not constant. Notes state 42 lattice points of reach per full step, two computed points per unique sphere point and four cone patches each within 8 cells.",
+  "render": {
+    "script": "scripts/make_figures.py",
+    "canvas_css_px": [
+      830,
+      700
+    ],
+    "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
+    "png": "1660 x 1400 px, RGB, no alpha, for display at 830 CSS px",
+    "preview": "830 x 700 px screen-size copy and a grayscale copy in figures/preview/",
+    "font": "DejaVu Sans (bundled with Matplotlib)",
+    "background": "opaque white",
+    "versions": {
+      "python": "3.14.7",
+      "matplotlib": "3.11.1",
+      "numpy": "2.4.6",
+      "pillow": "12.2.0"
+    }
+  },
+  "layout_audit": {
+    "texts": [
+      {
+        "text": "64",
+        "px": 17.0,
+        "box_css_px": [
+          219.7,
+          81.0,
+          241.7,
+          98.0
+        ]
+      },
+      {
+        "text": "128",
+        "px": 17.0,
+        "box_css_px": [
+          435.5,
+          81.0,
+          468.5,
+          98.0
+        ]
+      },
+      {
+        "text": "256",
+        "px": 17.0,
+        "box_css_px": [
+          656.8,
+          81.0,
+          689.8,
+          98.0
+        ]
+      },
+      {
+        "text": "Torus width M (computed points = M squared)",
+        "px": 18.0,
+        "box_css_px": [
+          245.7,
+          49.3,
+          658.3,
+          67.7
+        ]
+      },
+      {
+        "text": "0.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          103.5,
+          93.3,
+          120.5
+        ]
+      },
+      {
+        "text": "1.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          259.5,
+          93.3,
+          276.5
+        ]
+      },
+      {
+        "text": "2.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          415.5,
+          93.3,
+          432.5
+        ]
+      },
+      {
+        "text": "3.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          571.5,
+          93.3,
+          588.5
+        ]
+      },
+      {
+        "text": "Stable step / equatorial wave-crossing time",
+        "px": 18.0,
+        "box_css_px": [
+          32.0,
+          153.7,
+          50.3,
+          542.3
+        ]
+      },
+      {
+        "text": "2.45",
+        "px": 17.0,
+        "box_css_px": [
+          209.7,
+          516.1,
+          251.7,
+          533.1
+        ]
+      },
+      {
+        "text": "2.32",
+        "px": 17.0,
+        "box_css_px": [
+          431.0,
+          495.3,
+          473.0,
+          512.3
+        ]
+      },
+      {
+        "text": "2.25",
+        "px": 17.0,
+        "box_css_px": [
+          652.3,
+          485.3,
+          694.3,
+          502.3
+        ]
+      },
+      {
+        "text": "42 lattice points of reach per full step",
+        "px": 17.0,
+        "box_css_px": [
+          139.2,
+          222.5,
+          456.8,
+          239.5
+        ]
+      },
+      {
+        "text": "Two computed points per unique sphere point",
+        "px": 17.0,
+        "box_css_px": [
+          139.2,
+          183.5,
+          528.0,
+          200.5
+        ]
+      },
+      {
+        "text": "Four cone patches, each within 8 cells",
+        "px": 17.0,
+        "box_css_px": [
+          139.2,
+          144.5,
+          460.6,
+          161.5
+        ]
+      },
+      {
+        "text": "The poles no longer collapse the stable step",
+        "px": 25.0,
+        "box_css_px": [
+          24.0,
+          653.0,
+          655.0,
+          678.0
+        ]
+      },
+      {
+        "text": "TC5 stability bisection, 50 simulated days",
+        "px": 19.0,
+        "box_css_px": [
+          24.0,
+          621.0,
+          417.9,
+          640.0
+        ]
+      }
+    ],
+    "min_text_px": 17.0,
+    "min_edge_gap_px": 22.0,
+    "text_count": 17,
+    "checks": [
+      "only approved wording or numbers",
+      "no em dash, en dash, curly quote or unicode minus",
+      "every text at least 14 CSS px",
+      "every text at least 6 CSS px inside the canvas",
+      "no two texts overlap (2 px clearance)",
+      "no text over a data marker or data line (2 px clearance)"
+    ]
+  },
+  "outputs": {
+    "figures/locality.svg": {
+      "sha256": "9bb2b8d00066b101e70881616a22d57364080b52b7f05509e72efab15c3ff211",
+      "bytes": 57567
+    },
+    "figures/locality.png": {
+      "sha256": "31c4a538431e83f0d3fafaef2f1e569aec88ed9a4cd6546b62f0f0a029b83fe1",
+      "bytes": 99614
+    },
+    "figures/preview/locality-830.png": {
+      "sha256": "ec8b371cd3c8ec65852356de4860213a299a280288cc969704e3a534990b093c",
+      "bytes": 46641
+    },
+    "figures/preview/locality-830-grayscale.png": {
+      "sha256": "615ca9c1bc50d3ce262581b61d1dc9511fb41a7b1f57e6d99f8b25e75287fa1d",
+      "bytes": 22099
+    }
+  }
+}

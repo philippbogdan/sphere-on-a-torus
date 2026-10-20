@@ -1,0 +1,381 @@
+{
+  "figure": "filter-trade",
+  "wording": {
+    "title": "A polar filter can win while bandwidth dominates",
+    "subtitle": "Optimistic model: same kernel, same unique-cell count",
+    "x_axis": "Lat-lon grid spacing (arcseconds)",
+    "y_axis": "Filtered lat-lon throughput / torus throughput",
+    "reference": "Equal throughput",
+    "note_latency": "Whole-latitude filtering costs at least 3 node latencies per step in this model.",
+    "note_scope": "Patch-core overhead is omitted for both layouts. Filter accuracy was not tested."
+  },
+  "source_data": {
+    "figure-pack/filter_trade.csv": {
+      "sha256": "3b3df948ecc161e0854df95c649991d18d9550d2e41cf18e53c4605dfcf72591"
+    }
+  },
+  "source_origin": "figure-pack/ is written by scripts/prepare_figures.py from the saved measurements in data/ (checked against data/manifest.json); no earlier plot was read",
+  "uncertainty": "none shown and none exists: values are deterministic measured errors or model outputs, not replicate estimates",
+  "columns_used": {
+    "arcsec": "x position",
+    "filter_over_torus": "y position and value label"
+  },
+  "plotted_values": [
+    {
+      "arcsec": 15,
+      "filter_over_torus": 1.4112587491346305,
+      "label": "1.41x",
+      "filter_limit": "io"
+    },
+    {
+      "arcsec": 30,
+      "filter_over_torus": 1.408345793916978,
+      "label": "1.41x",
+      "filter_limit": "io"
+    },
+    {
+      "arcsec": 60,
+      "filter_over_torus": 1.4026419494637992,
+      "label": "1.40x",
+      "filter_limit": "io"
+    },
+    {
+      "arcsec": 120,
+      "filter_over_torus": 1.3916993026768387,
+      "label": "1.39x",
+      "filter_limit": "io"
+    },
+    {
+      "arcsec": 240,
+      "filter_over_torus": 1.3348948303627215,
+      "label": "1.33x",
+      "filter_limit": "latency"
+    },
+    {
+      "arcsec": 480,
+      "filter_over_torus": 0.7176234151813607,
+      "label": "0.72x",
+      "filter_limit": "latency"
+    },
+    {
+      "arcsec": 960,
+      "filter_over_torus": 0.6214014048503995,
+      "label": "0.62x",
+      "filter_limit": "latency"
+    }
+  ],
+  "transformations": [
+    "filter_over_torus is plotted unchanged and checked equal to filter_steps_per_s / torus_steps_per_s",
+    "x is log2 with every tested spacing labelled; y is linear from 0 to 1.6",
+    "value labels are the ratio rounded to two decimals with an x suffix",
+    "the dashed horizontal line marks a ratio of exactly 1",
+    "the connecting line joins the seven modelled spacings in order; the model's switch from an io limit to a latency limit between 120 and 240 arcseconds is recorded in filter_limit, not drawn"
+  ],
+  "encoding": {
+    "filtered lat-lon over torus": "vermillion filled squares joined by a vermillion line (latitude-longitude family)",
+    "equal throughput": "grey dashed line at 1, labelled directly"
+  },
+  "status": "every value is a model output from an optimistic performance model; no hardware run, no interval",
+  "alt_text": "Line plot of modelled throughput of a latitude-longitude grid with a polar filter divided by torus throughput, for grid spacings from 15 to 960 arcseconds. The filtered grid is ahead by 1.41x at 15 arcseconds, about 1.40x to 1.33x up to 240 arcseconds, then falls below the equal throughput line to 0.72x at 480 and 0.62x at 960 arcseconds. Notes say whole-latitude filtering costs at least 3 node latencies per step in this model, patch-core overhead is omitted for both layouts and filter accuracy was not tested.",
+  "render": {
+    "script": "scripts/make_figures.py",
+    "canvas_css_px": [
+      830,
+      770
+    ],
+    "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
+    "png": "1660 x 1540 px, RGB, no alpha, for display at 830 CSS px",
+    "preview": "830 x 770 px screen-size copy and a grayscale copy in figures/preview/",
+    "font": "DejaVu Sans (bundled with Matplotlib)",
+    "background": "opaque white",
+    "versions": {
+      "python": "3.14.7",
+      "matplotlib": "3.11.1",
+      "numpy": "2.4.6",
+      "pillow": "12.2.0"
+    }
+  },
+  "layout_audit": {
+    "texts": [
+      {
+        "text": "15",
+        "px": 17.0,
+        "box_css_px": [
+          148.4,
+          139.0,
+          170.4,
+          156.0
+        ]
+      },
+      {
+        "text": "30",
+        "px": 17.0,
+        "box_css_px": [
+          245.9,
+          139.0,
+          267.9,
+          156.0
+        ]
+      },
+      {
+        "text": "60",
+        "px": 17.0,
+        "box_css_px": [
+          343.5,
+          139.0,
+          365.5,
+          156.0
+        ]
+      },
+      {
+        "text": "120",
+        "px": 17.0,
+        "box_css_px": [
+          435.5,
+          139.0,
+          468.5,
+          156.0
+        ]
+      },
+      {
+        "text": "240",
+        "px": 17.0,
+        "box_css_px": [
+          533.0,
+          139.0,
+          566.0,
+          156.0
+        ]
+      },
+      {
+        "text": "480",
+        "px": 17.0,
+        "box_css_px": [
+          630.6,
+          139.0,
+          663.6,
+          156.0
+        ]
+      },
+      {
+        "text": "960",
+        "px": 17.0,
+        "box_css_px": [
+          728.1,
+          139.0,
+          761.1,
+          156.0
+        ]
+      },
+      {
+        "text": "Lat-lon grid spacing (arcseconds)",
+        "px": 18.0,
+        "box_css_px": [
+          304.2,
+          107.3,
+          599.8,
+          125.7
+        ]
+      },
+      {
+        "text": "0.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          161.5,
+          93.3,
+          178.5
+        ]
+      },
+      {
+        "text": "0.5",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          311.5,
+          93.3,
+          328.5
+        ]
+      },
+      {
+        "text": "1.0",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          461.5,
+          93.3,
+          478.5
+        ]
+      },
+      {
+        "text": "1.5",
+        "px": 17.0,
+        "box_css_px": [
+          66.3,
+          611.5,
+          93.3,
+          628.5
+        ]
+      },
+      {
+        "text": "Filtered lat-lon throughput / torus throughput",
+        "px": 18.0,
+        "box_css_px": [
+          32.0,
+          212.7,
+          50.3,
+          611.3
+        ]
+      },
+      {
+        "text": "1.41x",
+        "px": 17.0,
+        "box_css_px": [
+          132.9,
+          614.0,
+          185.9,
+          631.0
+        ]
+      },
+      {
+        "text": "1.41x",
+        "px": 17.0,
+        "box_css_px": [
+          230.4,
+          613.2,
+          283.4,
+          630.2
+        ]
+      },
+      {
+        "text": "1.40x",
+        "px": 17.0,
+        "box_css_px": [
+          328.0,
+          611.5,
+          381.0,
+          628.5
+        ]
+      },
+      {
+        "text": "1.39x",
+        "px": 17.0,
+        "box_css_px": [
+          425.5,
+          608.2,
+          478.5,
+          625.2
+        ]
+      },
+      {
+        "text": "1.33x",
+        "px": 17.0,
+        "box_css_px": [
+          523.0,
+          591.1,
+          576.0,
+          608.1
+        ]
+      },
+      {
+        "text": "0.72x",
+        "px": 17.0,
+        "box_css_px": [
+          620.6,
+          350.3,
+          673.6,
+          367.3
+        ]
+      },
+      {
+        "text": "0.62x",
+        "px": 17.0,
+        "box_css_px": [
+          718.1,
+          321.4,
+          771.1,
+          338.4
+        ]
+      },
+      {
+        "text": "Equal throughput",
+        "px": 17.0,
+        "box_css_px": [
+          632.2,
+          481.3,
+          781.8,
+          498.4
+        ]
+      },
+      {
+        "text": "A polar filter can win while bandwidth dominates",
+        "px": 25.0,
+        "box_css_px": [
+          24.0,
+          723.0,
+          724.0,
+          748.0
+        ]
+      },
+      {
+        "text": "Optimistic model: same kernel, same unique-cell count",
+        "px": 19.0,
+        "box_css_px": [
+          24.0,
+          691.0,
+          549.0,
+          710.0
+        ]
+      },
+      {
+        "text": "Whole-latitude filtering costs at least 3 node latencies per step in this model.",
+        "px": 17.0,
+        "box_css_px": [
+          24.0,
+          60.9,
+          678.0,
+          78.0
+        ]
+      },
+      {
+        "text": "Patch-core overhead is omitted for both layouts. Filter accuracy was not tested.",
+        "px": 17.0,
+        "box_css_px": [
+          24.0,
+          30.9,
+          693.3,
+          48.0
+        ]
+      }
+    ],
+    "min_text_px": 17.0,
+    "min_edge_gap_px": 22.0,
+    "text_count": 25,
+    "checks": [
+      "only approved wording or numbers",
+      "no em dash, en dash, curly quote or unicode minus",
+      "every text at least 14 CSS px",
+      "every text at least 6 CSS px inside the canvas",
+      "no two texts overlap (2 px clearance)",
+      "no text over a data marker or data line (2 px clearance)"
+    ]
+  },
+  "outputs": {
+    "figures/filter-trade.svg": {
+      "sha256": "9bbb095590e59fa8036dbf457b9059a87a041d304a1491386b8426700665a612",
+      "bytes": 71652
+    },
+    "figures/filter-trade.png": {
+      "sha256": "cc9b2652ad0717f7677b2a7448dda14a2857ccf9c5509ed2d73e9e51fa061951",
+      "bytes": 126493
+    },
+    "figures/preview/filter-trade-830.png": {
+      "sha256": "4593f7ac3fd2742229bd009c670b55850eaf95cd9c929c86dc6ff0552bf12e8f",
+      "bytes": 58591
+    },
+    "figures/preview/filter-trade-830-grayscale.png": {
+      "sha256": "2da8e5e613a3b3e104ba615046d55cd513f2cba917f20dbcf2fa119471cbbf41",
+      "bytes": 27495
+    }
+  }
+}

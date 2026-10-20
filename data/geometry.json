@@ -1,0 +1,38 @@
+{
+ "conformal_M128": {
+  "sigma_min_over_mean": 0.024207152193025314,
+  "sigma_max_over_mean": 1.2748454284543522,
+  "anisotropy_max": 1.0007193411419033,
+  "anisotropy_median": 1.0003649259393825,
+  "area_max_over_min": 2773.449184017051,
+  "min_chord_over_mean_chord": 0.025227121700044233,
+  "total_area_over_8pi": 0.9989250858955986
+ },
+ "equal_area_M128": {
+  "sigma_min_over_mean": 0.5347006172529831,
+  "sigma_max_over_mean": 1.407726240387147,
+  "anisotropy_max": 1.9840727923025754,
+  "anisotropy_median": 1.8185757620324474,
+  "area_max_over_min": 2.73209598729539,
+  "min_chord_over_mean_chord": 0.6680017840924711,
+  "total_area_over_8pi": 0.9989697942845684
+ },
+ "conformal_M256": {
+  "sigma_min_over_mean": 0.012098704814813498,
+  "sigma_max_over_mean": 1.275055547815896,
+  "anisotropy_max": 1.0001799611125897,
+  "anisotropy_median": 1.0000914432813937,
+  "area_max_over_min": 11106.55979292566,
+  "min_chord_over_mean_chord": 0.012613137386793042,
+  "total_area_over_8pi": 0.9997311258193265
+ },
+ "equal_area_M256": {
+  "sigma_min_over_mean": 0.5345670615551027,
+  "sigma_max_over_mean": 1.410504674662476,
+  "anisotropy_max": 1.9917626519856177,
+  "anisotropy_median": 1.8225666948348738,
+  "area_max_over_min": 2.7325747640270164,
+  "min_chord_over_mean_chord": 0.6678134322026451,
+  "total_area_over_8pi": 0.9997421345724329
+ }
+}

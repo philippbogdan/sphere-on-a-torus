@@ -1,0 +1,241 @@
+{
+  "figure": "throughput",
+  "wording": {
+    "title": "Whole-sphere throughput without a polar filter",
+    "subtitle": "Modelled on 64 CS-3 systems at 15 arcseconds",
+    "x_axis": "Simulated time per wall time / polar-limited lat-lon",
+    "note": "Shared patch work is a layout estimate. No Cerebras hardware was used."
+  },
+  "source_data": {
+    "figure-pack/throughput.csv": {
+      "sha256": "28e180aab0bc4006705d6bc75ff1ca6e593cf7e3fc7b71368b648c285f1511c5"
+    }
+  },
+  "source_origin": "figure-pack/ is written by scripts/prepare_figures.py from the saved measurements in data/ (checked against data/manifest.json); no earlier plot was read",
+  "uncertainty": "none shown and none exists: values are deterministic measured errors or model outputs, not replicate estimates",
+  "columns_used": {
+    "layout": "row label, verbatim",
+    "relative": "x position"
+  },
+  "plotted_values": [
+    {
+      "layout": "Polar-limited lat-lon",
+      "relative": 1.0,
+      "label": "1x"
+    },
+    {
+      "layout": "Torus, patch work counted",
+      "relative": 855.7992390163377,
+      "label": "856x"
+    },
+    {
+      "layout": "Torus, shared patch work",
+      "relative": 1262.6923637494456,
+      "label": "1,263x"
+    }
+  ],
+  "transformations": [
+    "relative is plotted unchanged on a log10 x axis that starts at 1 and ends at 2,000",
+    "value labels are relative rounded to whole numbers with a thousands separator and an x suffix",
+    "steps_per_s is not drawn; it is kept in the source file"
+  ],
+  "encoding": {
+    "Polar-limited lat-lon": "vermillion filled square, the latitude-longitude reference",
+    "Torus, patch work counted": "blue filled circle, counted-work model",
+    "Torus, shared patch work": "blue open diamond, additional layout estimate",
+    "row guides": "light grey horizontal lines for reading only; they are not bars and encode nothing"
+  },
+  "status": "every value is a model output: the paper's performance model applied to 64 CS-3 systems at 15 arcseconds. No hardware run.",
+  "alt_text": "Dot plot on a log scale of modelled whole-sphere throughput relative to a polar-limited latitude-longitude grid on 64 CS-3 systems at 15 arcseconds. Polar-limited lat-lon is 1x, the torus with patch work counted is 856x, and the torus with shared patch work, an additional layout estimate shown as an open diamond, is 1,263x.",
+  "render": {
+    "script": "scripts/make_figures.py",
+    "canvas_css_px": [
+      830,
+      520
+    ],
+    "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
+    "png": "1660 x 1040 px, RGB, no alpha, for display at 830 CSS px",
+    "preview": "830 x 520 px screen-size copy and a grayscale copy in figures/preview/",
+    "font": "DejaVu Sans (bundled with Matplotlib)",
+    "background": "opaque white",
+    "versions": {
+      "python": "3.14.7",
+      "matplotlib": "3.11.1",
+      "numpy": "2.4.6",
+      "pillow": "12.2.0"
+    }
+  },
+  "layout_audit": {
+    "texts": [
+      {
+        "text": "1",
+        "px": 17.0,
+        "box_css_px": [
+          256.5,
+          119.0,
+          267.5,
+          136.0
+        ]
+      },
+      {
+        "text": "10",
+        "px": 17.0,
+        "box_css_px": [
+          406.1,
+          119.0,
+          428.1,
+          136.0
+        ]
+      },
+      {
+        "text": "100",
+        "px": 17.0,
+        "box_css_px": [
+          555.7,
+          119.0,
+          588.7,
+          136.0
+        ]
+      },
+      {
+        "text": "1,000",
+        "px": 17.0,
+        "box_css_px": [
+          702.8,
+          119.0,
+          751.8,
+          136.0
+        ]
+      },
+      {
+        "text": "Simulated time per wall time / polar-limited lat-lon",
+        "px": 18.0,
+        "box_css_px": [
+          290.6,
+          87.3,
+          745.4,
+          105.7
+        ]
+      },
+      {
+        "text": "Polar-limited lat-lon",
+        "px": 17.0,
+        "box_css_px": [
+          78.0,
+          323.8,
+          243.3,
+          340.9
+        ]
+      },
+      {
+        "text": "Torus, patch work counted",
+        "px": 17.0,
+        "box_css_px": [
+          21.2,
+          252.3,
+          243.3,
+          269.3
+        ]
+      },
+      {
+        "text": "Torus, shared patch work",
+        "px": 17.0,
+        "box_css_px": [
+          32.6,
+          180.7,
+          243.3,
+          197.8
+        ]
+      },
+      {
+        "text": "1x",
+        "px": 17.0,
+        "box_css_px": [
+          250.5,
+          354.4,
+          273.5,
+          371.4
+        ]
+      },
+      {
+        "text": "856x",
+        "px": 17.0,
+        "box_css_px": [
+          693.3,
+          282.8,
+          740.3,
+          299.8
+        ]
+      },
+      {
+        "text": "1,263x",
+        "px": 17.0,
+        "box_css_px": [
+          710.5,
+          211.3,
+          775.5,
+          228.3
+        ]
+      },
+      {
+        "text": "Whole-sphere throughput without a polar filter",
+        "px": 25.0,
+        "box_css_px": [
+          24.0,
+          473.0,
+          694.0,
+          498.0
+        ]
+      },
+      {
+        "text": "Modelled on 64 CS-3 systems at 15 arcseconds",
+        "px": 19.0,
+        "box_css_px": [
+          24.0,
+          441.0,
+          473.6,
+          460.0
+        ]
+      },
+      {
+        "text": "Shared patch work is a layout estimate. No Cerebras hardware was used.",
+        "px": 17.0,
+        "box_css_px": [
+          24.0,
+          34.9,
+          641.6,
+          52.0
+        ]
+      }
+    ],
+    "min_text_px": 17.0,
+    "min_edge_gap_px": 21.2,
+    "text_count": 14,
+    "checks": [
+      "only approved wording or numbers",
+      "no em dash, en dash, curly quote or unicode minus",
+      "every text at least 14 CSS px",
+      "every text at least 6 CSS px inside the canvas",
+      "no two texts overlap (2 px clearance)",
+      "no text over a data marker or data line (2 px clearance)"
+    ]
+  },
+  "outputs": {
+    "figures/throughput.svg": {
+      "sha256": "5ca894aceb0c39df04e78735fba2d145c0bcb6017cc95501d4db68ac749a56ca",
+      "bytes": 59594
+    },
+    "figures/throughput.png": {
+      "sha256": "e3fbce3d4a3695f01056e2de32dea135c152b5424b09d28046a8f7cbe1964dc7",
+      "bytes": 87547
+    },
+    "figures/preview/throughput-830.png": {
+      "sha256": "7f654d4146922c86fd284bd2f8235218e65b916118cde15905974bef3d4c8822",
+      "bytes": 41568
+    },
+    "figures/preview/throughput-830-grayscale.png": {
+      "sha256": "97d327171de609c23511a5452750aa353fd2d3a0de0d8561196d409b45d8b1f4",
+      "bytes": 19470
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.venv/
+.cache/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+build/
+refs/stswm/stswm.tgz
+refs/stswm/src/
+refs/stswm/lib/
+refs/stswm/docu/
+refs/stswm/test*/
+refs/stswm/netcdf/
+refs/stswm/build_T*/
+refs/stswm/runs/
+refs/stswm/README

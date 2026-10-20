@@ -1,0 +1,69 @@
+{
+  "step_ratio": 16505.412450384152,
+  "cost": {
+    "flops": 2163,
+    "reach": 42,
+    "static_words": 4,
+    "state_words": 3,
+    "cone_R": 8.0,
+    "cone_entries": 25,
+    "cone_flops": 5248,
+    "cone_static_words": 151,
+    "cone_flop_ratio": 2.426259824318077,
+    "cone_curl": "compatible"
+  },
+  "patch_model": {
+    "patch_points": 230,
+    "block_max": 96,
+    "block": 96,
+    "worst_core_ratio": 2.426259824318077,
+    "t_compute": 0.00029162620262263516,
+    "t_compute_worst": 0.0007075609391417427,
+    "t_io": 0.00047585021068770767,
+    "t_io_with_patch": 0.000479554744021041,
+    "extra_link_words": 34730,
+    "steps_per_s_no_redistribution": 1413.305829478066,
+    "steps_per_s": 2101.5016438781886,
+    "nshare": 42,
+    "worst_core_ratio_shared": 1.081359067359414,
+    "steps_per_s_redistributed": 2085.2676622799167
+  },
+  "calibration": [
+    {
+      "n": 2,
+      "model": 2170138.888888889,
+      "paper_figure": 1600000.0,
+      "relative_error": 0.3563368055555556
+    },
+    {
+      "n": 4,
+      "model": 1302083.3333333333,
+      "paper_figure": 1040000.0,
+      "relative_error": 0.25200320512820507
+    },
+    {
+      "n": 8,
+      "model": 723379.6296296295,
+      "paper_figure": 630000.0,
+      "relative_error": 0.14822163433274538
+    },
+    {
+      "n": 16,
+      "model": 382965.6862745098,
+      "paper_figure": 350000.0,
+      "relative_error": 0.09418767507002812
+    },
+    {
+      "n": 32,
+      "model": 105545.20430737016,
+      "paper_figure": 105000.0,
+      "relative_error": 0.0051924219749539535
+    },
+    {
+      "n": 64,
+      "model": 26911.15872990813,
+      "paper_figure": 27000.0,
+      "relative_error": -0.0032904174108100426
+    }
+  ]
+}
