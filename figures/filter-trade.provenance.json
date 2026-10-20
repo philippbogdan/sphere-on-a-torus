@@ -2,12 +2,9 @@
   "figure": "filter-trade",
   "wording": {
     "title": "A polar filter can win while bandwidth dominates",
-    "subtitle": "Optimistic model: same kernel, same unique-cell count",
     "x_axis": "Lat-lon grid spacing (arcseconds)",
     "y_axis": "Filtered lat-lon throughput / torus throughput",
-    "reference": "Equal throughput",
-    "note_latency": "Whole-latitude filtering costs at least 3 node latencies per step in this model.",
-    "note_scope": "Patch-core overhead is omitted for both layouts. Filter accuracy was not tested."
+    "reference": "Equal throughput"
   },
   "source_data": {
     "figure-pack/filter_trade.csv": {
@@ -76,16 +73,15 @@
     "equal throughput": "grey dashed line at 1, labelled directly"
   },
   "status": "every value is a model output from an optimistic performance model; no hardware run, no interval",
-  "alt_text": "Line plot of modelled throughput of a latitude-longitude grid with a polar filter divided by torus throughput, for grid spacings from 15 to 960 arcseconds. The filtered grid is ahead by 1.41x at 15 arcseconds, about 1.40x to 1.33x up to 240 arcseconds, then falls below the equal throughput line to 0.72x at 480 and 0.62x at 960 arcseconds. Notes say whole-latitude filtering costs at least 3 node latencies per step in this model, patch-core overhead is omitted for both layouts and filter accuracy was not tested.",
+  "alt_text": "Line plot of modelled throughput of a latitude-longitude grid with a polar filter divided by torus throughput, for grid spacings from 15 to 960 arcseconds. The filtered grid is ahead by 1.41x at 15 arcseconds, about 1.40x to 1.33x up to 240 arcseconds, then falls below the equal throughput line to 0.72x at 480 and 0.62x at 960 arcseconds.",
   "render": {
     "script": "scripts/make_figures.py",
     "canvas_css_px": [
       830,
-      770
+      659
     ],
     "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
-    "png": "1660 x 1540 px, RGB, no alpha, for display at 830 CSS px",
-    "preview": "830 x 770 px screen-size copy and a grayscale copy in figures/preview/",
+    "png": "1660 x 1318 px, RGB, no alpha, for display at 830 CSS px",
     "font": "DejaVu Sans (bundled with Matplotlib)",
     "background": "opaque white",
     "versions": {
@@ -102,9 +98,9 @@
         "px": 17.0,
         "box_css_px": [
           148.4,
-          139.0,
+          58.0,
           170.4,
-          156.0
+          75.0
         ]
       },
       {
@@ -112,9 +108,9 @@
         "px": 17.0,
         "box_css_px": [
           245.9,
-          139.0,
+          58.0,
           267.9,
-          156.0
+          75.0
         ]
       },
       {
@@ -122,9 +118,9 @@
         "px": 17.0,
         "box_css_px": [
           343.5,
-          139.0,
+          58.0,
           365.5,
-          156.0
+          75.0
         ]
       },
       {
@@ -132,9 +128,9 @@
         "px": 17.0,
         "box_css_px": [
           435.5,
-          139.0,
+          58.0,
           468.5,
-          156.0
+          75.0
         ]
       },
       {
@@ -142,9 +138,9 @@
         "px": 17.0,
         "box_css_px": [
           533.0,
-          139.0,
+          58.0,
           566.0,
-          156.0
+          75.0
         ]
       },
       {
@@ -152,9 +148,9 @@
         "px": 17.0,
         "box_css_px": [
           630.6,
-          139.0,
+          58.0,
           663.6,
-          156.0
+          75.0
         ]
       },
       {
@@ -162,9 +158,9 @@
         "px": 17.0,
         "box_css_px": [
           728.1,
-          139.0,
+          58.0,
           761.1,
-          156.0
+          75.0
         ]
       },
       {
@@ -172,9 +168,9 @@
         "px": 18.0,
         "box_css_px": [
           304.2,
-          107.3,
+          26.3,
           599.8,
-          125.7
+          44.7
         ]
       },
       {
@@ -182,9 +178,9 @@
         "px": 17.0,
         "box_css_px": [
           66.3,
-          161.5,
+          80.5,
           93.3,
-          178.5
+          97.5
         ]
       },
       {
@@ -192,9 +188,9 @@
         "px": 17.0,
         "box_css_px": [
           66.3,
-          311.5,
+          230.5,
           93.3,
-          328.5
+          247.5
         ]
       },
       {
@@ -202,9 +198,9 @@
         "px": 17.0,
         "box_css_px": [
           66.3,
-          461.5,
+          380.5,
           93.3,
-          478.5
+          397.5
         ]
       },
       {
@@ -212,9 +208,9 @@
         "px": 17.0,
         "box_css_px": [
           66.3,
-          611.5,
+          530.5,
           93.3,
-          628.5
+          547.5
         ]
       },
       {
@@ -222,9 +218,9 @@
         "px": 18.0,
         "box_css_px": [
           32.0,
-          212.7,
+          131.7,
           50.3,
-          611.3
+          530.3
         ]
       },
       {
@@ -232,9 +228,9 @@
         "px": 17.0,
         "box_css_px": [
           132.9,
-          614.0,
+          533.0,
           185.9,
-          631.0
+          550.0
         ]
       },
       {
@@ -242,9 +238,9 @@
         "px": 17.0,
         "box_css_px": [
           230.4,
-          613.2,
+          532.2,
           283.4,
-          630.2
+          549.2
         ]
       },
       {
@@ -252,9 +248,9 @@
         "px": 17.0,
         "box_css_px": [
           328.0,
-          611.5,
+          530.5,
           381.0,
-          628.5
+          547.5
         ]
       },
       {
@@ -262,9 +258,9 @@
         "px": 17.0,
         "box_css_px": [
           425.5,
-          608.2,
+          527.2,
           478.5,
-          625.2
+          544.2
         ]
       },
       {
@@ -272,9 +268,9 @@
         "px": 17.0,
         "box_css_px": [
           523.0,
-          591.1,
+          510.1,
           576.0,
-          608.1
+          527.1
         ]
       },
       {
@@ -282,9 +278,9 @@
         "px": 17.0,
         "box_css_px": [
           620.6,
-          350.3,
+          269.3,
           673.6,
-          367.3
+          286.3
         ]
       },
       {
@@ -292,9 +288,9 @@
         "px": 17.0,
         "box_css_px": [
           718.1,
-          321.4,
+          240.4,
           771.1,
-          338.4
+          257.4
         ]
       },
       {
@@ -302,9 +298,9 @@
         "px": 17.0,
         "box_css_px": [
           632.2,
-          481.3,
+          400.3,
           781.8,
-          498.4
+          417.4
         ]
       },
       {
@@ -312,46 +308,17 @@
         "px": 25.0,
         "box_css_px": [
           24.0,
-          723.0,
+          612.0,
           724.0,
-          748.0
-        ]
-      },
-      {
-        "text": "Optimistic model: same kernel, same unique-cell count",
-        "px": 19.0,
-        "box_css_px": [
-          24.0,
-          691.0,
-          549.0,
-          710.0
-        ]
-      },
-      {
-        "text": "Whole-latitude filtering costs at least 3 node latencies per step in this model.",
-        "px": 17.0,
-        "box_css_px": [
-          24.0,
-          60.9,
-          678.0,
-          78.0
-        ]
-      },
-      {
-        "text": "Patch-core overhead is omitted for both layouts. Filter accuracy was not tested.",
-        "px": 17.0,
-        "box_css_px": [
-          24.0,
-          30.9,
-          693.3,
-          48.0
+          637.0
         ]
       }
     ],
     "min_text_px": 17.0,
     "min_edge_gap_px": 22.0,
-    "text_count": 25,
+    "text_count": 22,
     "checks": [
+      "no notes: only the title, axis labels, tick labels, row and column names, value labels and the reference-line label",
       "only approved wording or numbers",
       "no em dash, en dash, curly quote or unicode minus",
       "every text at least 14 CSS px",
@@ -362,20 +329,12 @@
   },
   "outputs": {
     "figures/filter-trade.svg": {
-      "sha256": "9bbb095590e59fa8036dbf457b9059a87a041d304a1491386b8426700665a612",
-      "bytes": 71652
+      "sha256": "cb02c6e459e9eef236d6d1b8b47e248c37e9686dd8db0b3ef6ca73815213be2e",
+      "bytes": 50924
     },
     "figures/filter-trade.png": {
-      "sha256": "cc9b2652ad0717f7677b2a7448dda14a2857ccf9c5509ed2d73e9e51fa061951",
-      "bytes": 126493
-    },
-    "figures/preview/filter-trade-830.png": {
-      "sha256": "4593f7ac3fd2742229bd009c670b55850eaf95cd9c929c86dc6ff0552bf12e8f",
-      "bytes": 58591
-    },
-    "figures/preview/filter-trade-830-grayscale.png": {
-      "sha256": "2da8e5e613a3b3e104ba615046d55cd513f2cba917f20dbcf2fa119471cbbf41",
-      "bytes": 27495
+      "sha256": "b5e53ab5c2528011ea0dc8583893dac824dd48e58e63204168a19b7495d6dc23",
+      "bytes": 90661
     }
   }
 }

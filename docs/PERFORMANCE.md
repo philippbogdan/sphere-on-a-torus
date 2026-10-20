@@ -1,25 +1,21 @@
-# What the speed model says
+# Speed-model assumptions
 
-At 15 arcseconds on an 8 by 8 torus of CS-3 nodes, the model gives about 856x the simulated-time throughput of an unfiltered, polar-limited latitude-longitude baseline. Sharing cone-patch work raises the estimate to about 1,263x. Neither figure is a hardware measurement or a comparison against a known production pole treatment.
+The headline comparison uses an 8 by 8 torus of CS-3 nodes at nominal equatorial spacing 463.3 m. Sphere area divided by spacing squared gives 2.38 billion unique torus points and 4.75 billion computed points. The lat-lon baseline has 86,400 by 43,200 points.
 
-The baseline uses the [Domain Translation paper's](https://arxiv.org/html/2511.11542v2) shallow-water cost model: `1026 + 183.2 n + 137.6 n squared` cycles per step and `64 n + 80` received words per core. Its grid is 86,400 by 43,200. The paper uses a Mercator projection and does not specify its pole treatment. Here a measured polar timestep scaling from a second-order centred/RK4 scheme class is extrapolated to that grid. It is not a measured stability limit of the paper's unpublished Lax-Wendroff implementation.
+The baseline uses the [Domain Translation paper's](https://arxiv.org/html/2511.11542v2) cost model: `1026 + 183.2 n + 137.6 n squared` cycles per step and `64 n + 80` received words per core. Its polar timestep is extrapolated from second-order centred/RK4 measurements, not measured for the paper's Lax-Wendroff implementation.
 
-The torus is compared at the same nominal equatorial spacing, 463.3 m, using sphere area divided by spacing squared for its unique-point count. That gives about 2.38 billion unique points and 4.75 billion computed points. This comparison therefore differs from the same-unique-cell comparison used for the polar-filter trade below.
+## Machine and kernel
 
-## Arithmetic and traffic
+The model assumes 744 by 1,116 cores per node, 0.75 GHz, two FP32 operations per cycle, 300 Gbit/s per wafer side and direction, 10 microseconds node latency and 12 ns average core-link latency. It transfers the paper's 53% compute utilisation to this kernel and assumes an equal directional split of the baseline's unpublished traffic.
 
-The model uses 744 by 1,116 cores per node, 0.75 GHz, two FP32 operations per cycle, 300 Gbit/s per wafer side and direction, 10 microseconds node latency, and 12 ns average core-link latency. It applies the paper's 53% compute utilisation to the new kernel. Directional bandwidth is separate. The baseline's directional traffic split, which is not published, is assumed equal.
+The torus counts 2,163 operations per point per step, including metric reconstruction. Each edge point sends 420 words: 252 state and 168 position/topography words. Translations cover 42 points. The baseline's constant and linear cycle terms scale with the traffic ratio, an assumption.
 
-The torus kernel counts 2,163 operations per point per step, including rebuilding metric terms from transmitted positions. It sends 420 words per edge point per step: 252 of state and 168 of position and topography. Each translation moves data by the 42-point dependency reach. The model scales the baseline's constant and linear cycle terms by the traffic ratio. That scaling and transfer of compute efficiency to this different kernel are assumptions.
+The 920 cone-patch points each need 151 extra coefficient words and 2.43x the interior work. Counting the worst core gives 1,413 steps/s; sharing over 42 nearby cores gives an estimated 2,085 steps/s. The baseline gives 27,258 steps/s. An extrapolated torus timestep 16,505x longer gives the README's throughput ratios.
 
-The 920 cone-patch points carry 151 extra stored words each and take 2.43x the interior point work. Counting the worst core's work gives 1,413 steps/s. Sharing work over 42 nearby cores gives an estimated 2,085 steps/s. The baseline gives 27,258 steps/s. The extrapolated stable torus step is about 16,505x longer, producing the throughput ratios above.
+A worst-aligned core holding all 96 patch points' coefficients would need about 70.5 kB against the assumed 48 kB. Both estimates require distribution or streaming. The shared model spreads storage over nearby cores, but neither its schedule nor communication has been implemented or timed. See the [porting requirements](PORT.md).
 
-The unshared arithmetic count is not a ready-to-run memory layout. A worst-aligned core with 96 patch points would need about 70.5 kB if all its coefficients were resident, exceeding the assumed 48 kB. Coefficients must be distributed or streamed. The shared model budgets that storage over nearby cores, but its schedule and communication have not been implemented or timed. Porting must settle this before treating either speed estimate as achievable.
+## Checks and scope
 
-The timestep extrapolation uses the measured TC5 stability limit at M=256. Limits were bisected to 2% over 50 simulated days at M=64, 128 and 256. The 15-arcsecond simulation itself was not run. As a check on the inherited model, compute-bound heat-equation rates match values read from the paper's figure within 1%. I/O-bound estimates are 9% to 35% optimistic. This checks the model calculation, not the new solver's hardware performance.
+TC5 stability limits were bisected to 2% over 50 simulated days at M=64, 128 and 256. The extrapolation uses M=256; the 15-arcsecond simulation was not run. The inherited model matches compute-bound heat-equation rates read from the paper within 1%, but is 9% to 35% optimistic for I/O-bound rates. This checks the model, not hardware performance of the new solver.
 
-## A polar filter can be faster
-
-This separate comparison holds the per-point kernel and number of unique points fixed. It omits cone-patch core overhead on both layouts. The filtered lat-lon model assumes a stable step as large as the torus and charges at least three node latencies per whole-latitude filter step. It does not count a specific FFT implementation or test the filter's accuracy. Treat it as an optimistic design comparison.
-
-Filtered lat-lon throughput divided by torus throughput is 1.41 at 15 arcseconds, 1.33 at 240, 0.72 at 480 and 0.62 at 960. At fine resolution bandwidth dominates and computing one copy helps. At coarse resolution the assumed filter latency dominates. The large 856x headline concerns the unfiltered polar-limited baseline and does not apply to this filtered alternative.
+The polar-filter comparison instead fixes the per-point kernel and unique-point count. It assumes the torus timestep and at least three node latencies for a whole-latitude filter, without costing a specific FFT. It omits cone-patch core overhead on both layouts. Bandwidth favours one copy at fine resolution; filter latency dominates at coarse resolution. Its ratios cannot be combined with the polar-limited headline.

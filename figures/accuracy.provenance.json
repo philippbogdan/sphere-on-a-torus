@@ -2,18 +2,12 @@
   "figure": "accuracy",
   "wording": {
     "title": "Lower height error in all 18 TRSK comparisons",
-    "subtitle": "This TRSK implementation on generated icosahedral meshes",
     "x_axis": "Approximate unique-cell count",
-    "colourbar": "TRSK l2 / torus l2 (log scale)",
-    "note_parity": "Ratios above 1 favour the torus. Its unique-cell count is about 1.2% higher.",
-    "note_spectral": "NCAR spectral is about 1.9x more accurate on TC6 at day 14."
+    "colourbar": "TRSK l2 / torus l2 (log scale)"
   },
   "source_data": {
     "figure-pack/accuracy.csv": {
       "sha256": "8bcb83b8ed0508a0e3cfba0a913d5553740ed46f4a293541bbbe676eb60f6fd4"
-    },
-    "figure-pack/spectral.csv": {
-      "sha256": "568083e7772fdeae15c55048d4bf37d10af4054e99606f7b543402e307ffee32"
     }
   },
   "source_origin": "figure-pack/ is written by scripts/prepare_figures.py from the saved measurements in data/ (checked against data/manifest.json); no earlier plot was read",
@@ -22,7 +16,7 @@
     "case": "row label, verbatim",
     "m": "column (144, 288, 576)",
     "ratio": "cell colour and label; checked equal to trsk_l2 / torus_l2",
-    "trsk_cells, torus_unique": "column labels and the 1.2% note"
+    "trsk_cells, torus_unique": "column labels"
   },
   "row_order": [
     "TC2, day 5",
@@ -224,31 +218,18 @@
     "reason": "vmin is parity, vmax is the largest ratio, so no cell is clipped or saturated"
   },
   "label_rounding": "three significant figures; values of 1,000 or more to the nearest whole number",
-  "note_checks": {
-    "unique_cell_excess": [
-      0.0123,
-      0.01245,
-      0.01249
-    ],
-    "spectral_torus_over_spectral_tc6_day14": [
-      1.8634911844146644,
-      1.9434919172988658,
-      1.9176598413493784
-    ]
-  },
   "missing_values": "torus_linf and trsk_linf are blank for the three TC6, day 5 rows; the figure uses only l2, which is present for all 18 pairs",
   "status": "deterministic l2 height errors from single runs; no replicates, no interval",
   "scope": "TRSK as implemented in this repository on generated icosahedral meshes; MPAS itself was not run",
-  "alt_text": "Colour matrix of TRSK l2 height error divided by torus l2 height error, six test cases by three resolutions of about 10k, 41k and 165k unique cells. All 18 ratios are above 1, so the torus has lower error everywhere. Smallest are TC6 at day 14 (1.16x, 1.39x, 1.83x); largest is the steady jet at 165k cells (3,182x). TC2 runs 99.7x to 659x. Notes say ratios above 1 favour the torus, its unique-cell count is about 1.2% higher, and NCAR's spectral model is about 1.9x more accurate on TC6 at day 14.",
+  "alt_text": "Colour matrix of TRSK l2 height error divided by torus l2 height error, six test cases by three resolutions of about 10k, 41k and 165k unique cells. All 18 ratios are above 1, so the torus has lower error everywhere. Smallest are TC6 at day 14 (1.16x, 1.39x, 1.83x); largest is the steady jet at 165k cells (3,182x). TC2 runs 99.7x to 659x.",
   "render": {
     "script": "scripts/make_figures.py",
     "canvas_css_px": [
       830,
-      780
+      682
     ],
     "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
-    "png": "1660 x 1560 px, RGB, no alpha, for display at 830 CSS px",
-    "preview": "830 x 780 px screen-size copy and a grayscale copy in figures/preview/",
+    "png": "1660 x 1364 px, RGB, no alpha, for display at 830 CSS px",
     "font": "DejaVu Sans (bundled with Matplotlib)",
     "background": "opaque white",
     "versions": {
@@ -265,9 +246,9 @@
         "px": 17.0,
         "box_css_px": [
           286.5,
-          614.7,
+          549.7,
           361.5,
-          631.8
+          566.8
         ]
       },
       {
@@ -275,9 +256,9 @@
         "px": 17.0,
         "box_css_px": [
           470.5,
-          614.7,
+          549.7,
           545.5,
-          631.8
+          566.8
         ]
       },
       {
@@ -285,9 +266,9 @@
         "px": 17.0,
         "box_css_px": [
           649.0,
-          614.7,
+          549.7,
           735.0,
-          631.8
+          566.8
         ]
       },
       {
@@ -295,9 +276,9 @@
         "px": 18.0,
         "box_css_px": [
           371.0,
-          643.4,
+          578.4,
           645.0,
-          661.8
+          596.8
         ]
       },
       {
@@ -305,9 +286,9 @@
         "px": 17.0,
         "box_css_px": [
           127.0,
-          561.4,
+          496.4,
           216.0,
-          578.5
+          513.5
         ]
       },
       {
@@ -315,9 +296,9 @@
         "px": 17.0,
         "box_css_px": [
           116.0,
-          497.4,
+          432.4,
           216.0,
-          514.5
+          449.5
         ]
       },
       {
@@ -325,9 +306,9 @@
         "px": 17.0,
         "box_css_px": [
           127.0,
-          433.4,
+          368.4,
           216.0,
-          450.5
+          385.5
         ]
       },
       {
@@ -335,9 +316,9 @@
         "px": 17.0,
         "box_css_px": [
           116.0,
-          369.4,
+          304.4,
           216.0,
-          386.5
+          321.5
         ]
       },
       {
@@ -345,9 +326,9 @@
         "px": 17.0,
         "box_css_px": [
           73.0,
-          305.4,
+          240.4,
           216.0,
-          322.5
+          257.5
         ]
       },
       {
@@ -355,9 +336,9 @@
         "px": 17.0,
         "box_css_px": [
           48.6,
-          241.4,
+          176.4,
           216.0,
-          258.5
+          193.5
         ]
       },
       {
@@ -365,9 +346,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          562.5,
+          497.5,
           353.0,
-          581.5
+          516.5
         ]
       },
       {
@@ -375,9 +356,9 @@
         "px": 19.0,
         "box_css_px": [
           482.5,
-          562.5,
+          497.5,
           533.5,
-          581.5
+          516.5
         ]
       },
       {
@@ -385,9 +366,9 @@
         "px": 19.0,
         "box_css_px": [
           666.5,
-          562.5,
+          497.5,
           717.5,
-          581.5
+          516.5
         ]
       },
       {
@@ -395,9 +376,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          498.5,
+          433.5,
           353.0,
-          517.5
+          452.5
         ]
       },
       {
@@ -405,9 +386,9 @@
         "px": 19.0,
         "box_css_px": [
           479.0,
-          498.5,
+          433.5,
           537.0,
-          517.5
+          452.5
         ]
       },
       {
@@ -415,9 +396,9 @@
         "px": 19.0,
         "box_css_px": [
           663.0,
-          498.5,
+          433.5,
           721.0,
-          517.5
+          452.5
         ]
       },
       {
@@ -425,9 +406,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          434.5,
+          369.5,
           353.0,
-          453.5
+          388.5
         ]
       },
       {
@@ -435,9 +416,9 @@
         "px": 19.0,
         "box_css_px": [
           479.0,
-          434.5,
+          369.5,
           537.0,
-          453.5
+          388.5
         ]
       },
       {
@@ -445,9 +426,9 @@
         "px": 19.0,
         "box_css_px": [
           663.0,
-          434.5,
+          369.5,
           721.0,
-          453.5
+          388.5
         ]
       },
       {
@@ -455,9 +436,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          370.5,
+          305.5,
           353.0,
-          389.5
+          324.5
         ]
       },
       {
@@ -465,9 +446,9 @@
         "px": 19.0,
         "box_css_px": [
           479.0,
-          370.5,
+          305.5,
           537.0,
-          389.5
+          324.5
         ]
       },
       {
@@ -475,9 +456,9 @@
         "px": 19.0,
         "box_css_px": [
           663.0,
-          370.5,
+          305.5,
           721.0,
-          389.5
+          324.5
         ]
       },
       {
@@ -485,9 +466,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          306.5,
+          241.5,
           353.0,
-          325.5
+          260.5
         ]
       },
       {
@@ -495,9 +476,9 @@
         "px": 19.0,
         "box_css_px": [
           482.5,
-          306.5,
+          241.5,
           533.5,
-          325.5
+          260.5
         ]
       },
       {
@@ -505,9 +486,9 @@
         "px": 19.0,
         "box_css_px": [
           656.5,
-          306.5,
+          241.5,
           727.5,
-          325.5
+          260.5
         ]
       },
       {
@@ -515,9 +496,9 @@
         "px": 19.0,
         "box_css_px": [
           295.0,
-          242.5,
+          177.5,
           353.0,
-          261.5
+          196.5
         ]
       },
       {
@@ -525,9 +506,9 @@
         "px": 19.0,
         "box_css_px": [
           479.0,
-          242.5,
+          177.5,
           537.0,
-          261.5
+          196.5
         ]
       },
       {
@@ -535,9 +516,9 @@
         "px": 19.0,
         "box_css_px": [
           663.0,
-          242.5,
+          177.5,
           721.0,
-          261.5
+          196.5
         ]
       },
       {
@@ -545,9 +526,9 @@
         "px": 17.0,
         "box_css_px": [
           226.5,
-          123.0,
+          58.0,
           237.5,
-          140.0
+          75.0
         ]
       },
       {
@@ -555,9 +536,9 @@
         "px": 17.0,
         "box_css_px": [
           378.6,
-          123.0,
+          58.0,
           400.6,
-          140.0
+          75.0
         ]
       },
       {
@@ -565,9 +546,9 @@
         "px": 17.0,
         "box_css_px": [
           530.7,
-          123.0,
+          58.0,
           563.7,
-          140.0
+          75.0
         ]
       },
       {
@@ -575,9 +556,9 @@
         "px": 17.0,
         "box_css_px": [
           680.3,
-          123.0,
+          58.0,
           729.3,
-          140.0
+          75.0
         ]
       },
       {
@@ -585,9 +566,9 @@
         "px": 18.0,
         "box_css_px": [
           381.5,
-          91.3,
+          26.3,
           634.5,
-          109.7
+          44.7
         ]
       },
       {
@@ -595,46 +576,17 @@
         "px": 25.0,
         "box_css_px": [
           24.0,
-          733.0,
+          635.0,
           682.0,
-          758.0
-        ]
-      },
-      {
-        "text": "This TRSK implementation on generated icosahedral meshes",
-        "px": 19.0,
-        "box_css_px": [
-          24.0,
-          701.0,
-          607.0,
-          720.0
-        ]
-      },
-      {
-        "text": "Ratios above 1 favour the torus. Its unique-cell count is about 1.2% higher.",
-        "px": 17.0,
-        "box_css_px": [
-          24.0,
-          50.9,
-          657.1,
-          68.0
-        ]
-      },
-      {
-        "text": "NCAR spectral is about 1.9x more accurate on TC6 at day 14.",
-        "px": 17.0,
-        "box_css_px": [
-          24.0,
-          20.9,
-          540.6,
-          38.0
+          660.0
         ]
       }
     ],
     "min_text_px": 17.0,
-    "min_edge_gap_px": 20.9,
-    "text_count": 37,
+    "min_edge_gap_px": 22.0,
+    "text_count": 34,
     "checks": [
+      "no notes: only the title, axis labels, tick labels, row and column names, value labels and the reference-line label",
       "only approved wording or numbers",
       "no em dash, en dash, curly quote or unicode minus",
       "every text at least 14 CSS px",
@@ -646,20 +598,12 @@
   },
   "outputs": {
     "figures/accuracy.svg": {
-      "sha256": "d4148b7c20e46c3c13a795ab0f87126f36ce92a7eca2440d264625bf6c0538b7",
-      "bytes": 89509
+      "sha256": "14e9ab45ca53eff263e9556dccbde11c085e12d1beba536cb87a50163212d90f",
+      "bytes": 72149
     },
     "figures/accuracy.png": {
-      "sha256": "4a55ed1040e3f80611fb2990b6e5ff5bdf52f447f3eb1e7ab1d529af2c813b8f",
-      "bytes": 150236
-    },
-    "figures/preview/accuracy-830.png": {
-      "sha256": "115ea23d31060c41fd035fbc1e47d92d332f7cc0166b625f251bd800e5a907df",
-      "bytes": 73220
-    },
-    "figures/preview/accuracy-830-grayscale.png": {
-      "sha256": "92273a7cba6fb6ea425a486923e34b893eb9c513d97c2084503e7a67f343b05d",
-      "bytes": 32352
+      "sha256": "1710068e3ef8ab5c2699ac5012b42143d56365d1e1c59c9d081e68f7cefe9bc1",
+      "bytes": 117620
     }
   }
 }

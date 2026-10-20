@@ -2,9 +2,7 @@
   "figure": "throughput",
   "wording": {
     "title": "Whole-sphere throughput without a polar filter",
-    "subtitle": "Modelled on 64 CS-3 systems at 15 arcseconds",
-    "x_axis": "Simulated time per wall time / polar-limited lat-lon",
-    "note": "Shared patch work is a layout estimate. No Cerebras hardware was used."
+    "x_axis": "Simulated time per wall time / polar-limited lat-lon"
   },
   "source_data": {
     "figure-pack/throughput.csv": {
@@ -51,11 +49,10 @@
     "script": "scripts/make_figures.py",
     "canvas_css_px": [
       830,
-      520
+      415
     ],
     "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
-    "png": "1660 x 1040 px, RGB, no alpha, for display at 830 CSS px",
-    "preview": "830 x 520 px screen-size copy and a grayscale copy in figures/preview/",
+    "png": "1660 x 830 px, RGB, no alpha, for display at 830 CSS px",
     "font": "DejaVu Sans (bundled with Matplotlib)",
     "background": "opaque white",
     "versions": {
@@ -72,9 +69,9 @@
         "px": 17.0,
         "box_css_px": [
           256.5,
-          119.0,
+          58.0,
           267.5,
-          136.0
+          75.0
         ]
       },
       {
@@ -82,9 +79,9 @@
         "px": 17.0,
         "box_css_px": [
           406.1,
-          119.0,
+          58.0,
           428.1,
-          136.0
+          75.0
         ]
       },
       {
@@ -92,9 +89,9 @@
         "px": 17.0,
         "box_css_px": [
           555.7,
-          119.0,
+          58.0,
           588.7,
-          136.0
+          75.0
         ]
       },
       {
@@ -102,9 +99,9 @@
         "px": 17.0,
         "box_css_px": [
           702.8,
-          119.0,
+          58.0,
           751.8,
-          136.0
+          75.0
         ]
       },
       {
@@ -112,9 +109,9 @@
         "px": 18.0,
         "box_css_px": [
           290.6,
-          87.3,
+          26.3,
           745.4,
-          105.7
+          44.7
         ]
       },
       {
@@ -122,9 +119,9 @@
         "px": 17.0,
         "box_css_px": [
           78.0,
-          323.8,
+          262.8,
           243.3,
-          340.9
+          279.9
         ]
       },
       {
@@ -132,9 +129,9 @@
         "px": 17.0,
         "box_css_px": [
           21.2,
-          252.3,
+          191.3,
           243.3,
-          269.3
+          208.3
         ]
       },
       {
@@ -142,9 +139,9 @@
         "px": 17.0,
         "box_css_px": [
           32.6,
-          180.7,
+          119.7,
           243.3,
-          197.8
+          136.8
         ]
       },
       {
@@ -152,9 +149,9 @@
         "px": 17.0,
         "box_css_px": [
           250.5,
-          354.4,
+          293.4,
           273.5,
-          371.4
+          310.4
         ]
       },
       {
@@ -162,9 +159,9 @@
         "px": 17.0,
         "box_css_px": [
           693.3,
-          282.8,
+          221.8,
           740.3,
-          299.8
+          238.8
         ]
       },
       {
@@ -172,9 +169,9 @@
         "px": 17.0,
         "box_css_px": [
           710.5,
-          211.3,
+          150.3,
           775.5,
-          228.3
+          167.3
         ]
       },
       {
@@ -182,36 +179,17 @@
         "px": 25.0,
         "box_css_px": [
           24.0,
-          473.0,
+          368.0,
           694.0,
-          498.0
-        ]
-      },
-      {
-        "text": "Modelled on 64 CS-3 systems at 15 arcseconds",
-        "px": 19.0,
-        "box_css_px": [
-          24.0,
-          441.0,
-          473.6,
-          460.0
-        ]
-      },
-      {
-        "text": "Shared patch work is a layout estimate. No Cerebras hardware was used.",
-        "px": 17.0,
-        "box_css_px": [
-          24.0,
-          34.9,
-          641.6,
-          52.0
+          393.0
         ]
       }
     ],
     "min_text_px": 17.0,
     "min_edge_gap_px": 21.2,
-    "text_count": 14,
+    "text_count": 12,
     "checks": [
+      "no notes: only the title, axis labels, tick labels, row and column names, value labels and the reference-line label",
       "only approved wording or numbers",
       "no em dash, en dash, curly quote or unicode minus",
       "every text at least 14 CSS px",
@@ -222,20 +200,12 @@
   },
   "outputs": {
     "figures/throughput.svg": {
-      "sha256": "5ca894aceb0c39df04e78735fba2d145c0bcb6017cc95501d4db68ac749a56ca",
-      "bytes": 59594
+      "sha256": "36c3bd7b5b9b22b2d5142739247c3a7160bdb7a158e7c291d34be1e213022838",
+      "bytes": 46888
     },
     "figures/throughput.png": {
-      "sha256": "e3fbce3d4a3695f01056e2de32dea135c152b5424b09d28046a8f7cbe1964dc7",
-      "bytes": 87547
-    },
-    "figures/preview/throughput-830.png": {
-      "sha256": "7f654d4146922c86fd284bd2f8235218e65b916118cde15905974bef3d4c8822",
-      "bytes": 41568
-    },
-    "figures/preview/throughput-830-grayscale.png": {
-      "sha256": "97d327171de609c23511a5452750aa353fd2d3a0de0d8561196d409b45d8b1f4",
-      "bytes": 19470
+      "sha256": "72adfbd8b2c84f92ce36207958111508ac06afa68af3911a55271c20b2c740a0",
+      "bytes": 58075
     }
   }
 }

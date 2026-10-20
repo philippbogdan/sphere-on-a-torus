@@ -3,9 +3,8 @@
 Run from anywhere: python scripts/make_figures.py
 
 Every figure is designed for a GitHub README column about 830 CSS pixels
-wide. The SVG is exactly 830 CSS pixels wide (622.5 pt), the PNG is the same
-canvas at twice the pixel density, and figures/preview/ holds screen-size
-PNG copies plus grayscale copies for inspection.
+wide. The SVG is exactly 830 CSS pixels wide (622.5 pt) and the PNG is the
+same canvas at twice the pixel density.
 
 The script checks its own output before writing anything: every text must
 be approved wording or a number, sit inside the canvas, avoid every other
@@ -42,7 +41,6 @@ from PIL import Image, PngImagePlugin  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "figure-pack"
 OUT = ROOT / "figures"
-PREVIEW = OUT / "preview"
 
 # Canvas geometry in CSS pixels. Matplotlib works in inches, so one CSS
 # pixel is 1/96 inch and one point is 4/3 CSS pixels.
@@ -50,6 +48,14 @@ WIDTH = 830
 CSS_DPI = 96
 PNG_SCALE = 2
 MIN_TEXT_PX = 14
+
+# Vertical layout, in CSS pixels from the top: the plot starts one gap below
+# the title and the canvas ends one margin below the lowest label.
+THROUGHPUT_TOP, THROUGHPUT_H = 88, 415
+LINE_TOP = 88
+LOCALITY_H = 647
+FILTER_H = 659
+MATRIX_TOP, ACCURACY_H = 143, 682
 
 
 def pt(px):
@@ -59,21 +65,24 @@ def pt(px):
 
 # Type scale, in CSS pixels at 830 px display width.
 TITLE_PX = 25
-SUBTITLE_PX = 19
 LABEL_PX = 18
 TICK_PX = 17
 VALUE_PX = 17
-NOTE_PX = 17
+REFERENCE_PX = 17
 CELL_PX = 19
 
 # Shared meanings across all four figures.
 TORUS = "#0072B2"  # Okabe-Ito blue: torus layouts, filled circle
 LATLON = "#D55E00"  # Okabe-Ito vermillion: latitude-longitude layouts, square
 INK = "#1A1A1A"  # titles, value labels
-SOFT_INK = "#3D3D3D"  # subtitles, ticks, notes
+SOFT_INK = "#3D3D3D"  # ticks, axis lines, reference-line label
 REFERENCE = "#595959"  # reference line
 GRID = "#E3E3E3"  # non-essential guides
 MATRIX_CMAP = "cividis_r"
+
+# The only wording a figure may carry besides numbers and row or column names.
+# Subtitles, notes, caveats and source lines belong in the README, not here.
+FIGURE_TEXT_ROLES = {"title", "x_axis", "y_axis", "colourbar", "reference"}
 
 FORBIDDEN = {
     "\u2013": "en dash",
@@ -165,9 +174,8 @@ class Canvas:
         )
 
 
-def heading(canvas, title, subtitle, left=24):
+def heading(canvas, title, left=24):
     canvas.text(left, 22, title, TITLE_PX, color=INK, fontweight="bold")
-    canvas.text(left, 60, subtitle, SUBTITLE_PX, color=SOFT_INK)
 
 
 def tidy(ax, left=True, bottom=True):
@@ -271,9 +279,20 @@ def overlaps(a, b, pad=0.0):
     return a[0] - pad < b[2] and b[0] - pad < a[2] and a[1] - pad < b[3] and b[1] - pad < a[3]
 
 
-def audit_layout(canvas, approved, inside_ok=()):
-    """Raise if any text is unapproved, too small, clipped or colliding."""
+def audit_layout(canvas, words, approved, inside_ok=()):
+    """Raise if any text is a note, unapproved, too small, clipped or colliding."""
     fig = canvas.fig
+    extra = sorted(set(words) - FIGURE_TEXT_ROLES)
+    if extra:
+        raise ValueError(f"figure wording is not a title, axis or reference label: {extra}")
+    free = [t.get_text() for t in fig.texts if t.get_visible() and t.get_text()]
+    if free != [words["title"]]:
+        raise ValueError(f"free-standing figure text other than the title: {free}")
+    for ax in fig.axes:
+        for t in ax.texts:
+            s = t.get_text()
+            if t.get_visible() and s and not NUMBER.match(s) and s != words.get("reference"):
+                raise ValueError(f"text inside the axes is not a value or reference label: {s!r}")
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
     scale = CSS_DPI / fig.dpi
@@ -320,6 +339,7 @@ def audit_layout(canvas, approved, inside_ok=()):
     report["min_edge_gap_px"] = round(min_gap, 1)
     report["text_count"] = len(boxes)
     report["checks"] = [
+        "no notes: only the title, axis labels, tick labels, row and column names, value labels and the reference-line label",
         "only approved wording or numbers",
         "no em dash, en dash, curly quote or unicode minus",
         f"every text at least {MIN_TEXT_PX} CSS px",
@@ -349,9 +369,7 @@ def throughput():
         raise ValueError(f"unexpected throughput rows {labels}")
     words = {
         "title": "Whole-sphere throughput without a polar filter",
-        "subtitle": "Modelled on 64 CS-3 systems at 15 arcseconds",
         "x_axis": "Simulated time per wall time / polar-limited lat-lon",
-        "note": "Shared patch work is a layout estimate. No Cerebras hardware was used.",
     }
     styles = [
         dict(marker="s", color=LATLON, mfc=LATLON, mec=LATLON),
@@ -360,9 +378,9 @@ def throughput():
     ]
     value_text = [times(v) for v in values]
 
-    canvas = Canvas(height=520)
-    heading(canvas, words["title"], words["subtitle"])
-    left, top, width, height = 262, 132, 512, 236
+    canvas = Canvas(height=THROUGHPUT_H)
+    heading(canvas, words["title"])
+    left, top, width, height = 262, THROUGHPUT_TOP, 512, 236
     ax = canvas.axes(left, top, width, height)
     tidy(ax, left=False)
     ax.set_xscale("log", base=10)
@@ -384,11 +402,10 @@ def throughput():
                     ha="center", va="bottom", fontsize=pt(VALUE_PX), fontweight="bold",
                     color=INK)
     ax.set_xlabel(words["x_axis"], fontsize=pt(LABEL_PX), labelpad=10)
-    canvas.text(24, 468, words["note"], NOTE_PX)
     check_data_inside(ax, values, range(len(rows)))
 
     approved = set(words.values()) | set(labels)
-    layout = audit_layout(canvas, approved)
+    layout = audit_layout(canvas, words, approved)
     meta = {
         "source_files": ["figure-pack/throughput.csv"],
         "columns_used": {"layout": "row label, verbatim", "relative": "x position"},
@@ -419,27 +436,20 @@ def throughput():
 
 def locality():
     rows = read_csv("stable_step.csv")
-    model = json.loads((PACK / "model.json").read_text())
     ms = [int(r["m"]) for r in rows]
     rs = [finite(r["r"], "stable step ratio") for r in rows]
     if ms != [64, 128, 256]:
         raise ValueError(f"unexpected torus widths {ms}")
-    if model["cost"]["reach"] != 42 or model["cost"]["cone_R"] != 8:
-        raise ValueError("model.json no longer supports the reach or cone-radius annotation")
     words = {
         "title": "The poles no longer collapse the stable step",
-        "subtitle": "TC5 stability bisection, 50 simulated days",
         "x_axis": "Torus width M (computed points = M squared)",
         "y_axis": "Stable step / equatorial wave-crossing time",
-        "note_reach": "42 lattice points of reach per full step",
-        "note_cover": "Two computed points per unique sphere point",
-        "note_cones": "Four cone patches, each within 8 cells",
     }
     value_text = [f"{r:.2f}" for r in rs]
 
-    canvas = Canvas(height=700)
-    heading(canvas, words["title"], words["subtitle"])
-    left, top, width, height = 112, 118, 680, 468
+    canvas = Canvas(height=LOCALITY_H)
+    heading(canvas, words["title"])
+    left, top, width, height = 112, LINE_TOP, 680, 468
     ax = canvas.axes(left, top, width, height)
     tidy(ax)
     ax.set_xscale("log", base=2)
@@ -460,16 +470,12 @@ def locality():
                     color=INK)
     ax.set_xlabel(words["x_axis"], fontsize=pt(LABEL_PX), labelpad=10)
     ax.set_ylabel(words["y_axis"], fontsize=pt(LABEL_PX), labelpad=12)
-    # The notes sit between the 0 and 1 gridlines, well below the data.
-    for i, key in enumerate(("note_reach", "note_cover", "note_cones")):
-        ax.text(0.04, 0.75 - i * 0.25, words[key], transform=ax.get_yaxis_transform(),
-                fontsize=pt(NOTE_PX), color=SOFT_INK, ha="left", va="center", zorder=2)
     check_data_inside(ax, ms, rs)
 
     approved = set(words.values())
-    layout = audit_layout(canvas, approved)
+    layout = audit_layout(canvas, words, approved)
     meta = {
-        "source_files": ["figure-pack/stable_step.csv", "figure-pack/model.json"],
+        "source_files": ["figure-pack/stable_step.csv"],
         "columns_used": {"m": "x position", "r": "y position and value label"},
         "plotted_values": [
             {"M": m, "r": r, "label": t} for m, r, t in zip(ms, rs, value_text)
@@ -479,16 +485,6 @@ def locality():
             "Equatorial spacing is from a lat-lon grid with the same computed-point count; "
             "wave speed is the initial maximum sqrt(gD) + |v|. Bisection tolerance is 2%."
         ),
-        "annotation_sources": {
-            "42 lattice points of reach per full step": "model.json cost.reach = 42",
-            "Two computed points per unique sphere point": (
-                "accuracy.csv: torus_unique is exactly M squared / 2 at M = 144, 288 and 576"
-            ),
-            "Four cone patches, each within 8 cells": (
-                "model.json cost.cone_R = 8 (also polarswe/configs.py CONE R=8); the count of four "
-                "is the tetrahedral double cover's cone points and is not a column in the figure data"
-            ),
-        },
         "transformations": [
             "r is plotted unchanged; value labels are r rounded to two decimals",
             "x is log2 with ticks at the three tested widths; y is linear from 0 to 3",
@@ -500,8 +496,7 @@ def locality():
             "Line and point plot of the largest stable step divided by the equatorial wave-crossing time "
             "for torus widths M of 64, 128 and 256 in the TC5 case over 50 simulated days. The ratio is "
             "2.45, 2.32 and 2.25: it stays bounded near 2.3 instead of collapsing as the grid refines, "
-            "though it is not constant. Notes state 42 lattice points of reach per full step, two "
-            "computed points per unique sphere point and four cone patches each within 8 cells."
+            "though it is not constant."
         ),
     }
     return "locality", canvas, words, meta, layout
@@ -529,26 +524,20 @@ def accuracy():
         for m in widths:
             if int(table[(c, m)]["torus_unique"]) * 2 != m * m:
                 raise ValueError("torus_unique is not M squared / 2")
-    excess = sorted({unique[0][j] / cells[0][j] - 1 for j in range(3)})
-    spectral = read_csv("spectral.csv")
-    spectral_ratios = [finite(r["torus_over_spectral"], "spectral ratio") for r in spectral]
 
     words = {
         "title": "Lower height error in all 18 TRSK comparisons",
-        "subtitle": "This TRSK implementation on generated icosahedral meshes",
         "x_axis": "Approximate unique-cell count",
         "colourbar": "TRSK l2 / torus l2 (log scale)",
-        "note_parity": "Ratios above 1 favour the torus. Its unique-cell count is about 1.2% higher.",
-        "note_spectral": "NCAR spectral is about 1.9x more accurate on TC6 at day 14.",
     }
     norm = mcolors.LogNorm(vmin=1.0, vmax=float(values.max()))
     cmap = matplotlib.colormaps[MATRIX_CMAP]
     if values.min() < norm.vmin or values.max() > norm.vmax:
         raise ValueError("colour limits would saturate a cell")
 
-    canvas = Canvas(height=780)
-    heading(canvas, words["title"], words["subtitle"])
-    left, top, width, height = 232, 176, 552, 384
+    canvas = Canvas(height=ACCURACY_H)
+    heading(canvas, words["title"])
+    left, top, width, height = 232, MATRIX_TOP, 552, 384
     ax = canvas.axes(left, top, width, height)
     for side in ax.spines.values():
         side.set_visible(False)
@@ -582,7 +571,7 @@ def accuracy():
     if worst < 4.5:
         raise ValueError(f"a cell label reaches only {worst}:1 contrast")
 
-    cax = canvas.axes(left, 600, width, 24)
+    cax = canvas.axes(left, MATRIX_TOP + height + 40, width, 24)
     bar = canvas.fig.colorbar(mesh, cax=cax, orientation="horizontal")
     bar.outline.set_edgecolor(SOFT_INK)
     bar.outline.set_linewidth(1.0)
@@ -592,19 +581,17 @@ def accuracy():
     cax.tick_params(axis="x", which="major", length=6, color=SOFT_INK)
     cax.tick_params(axis="x", which="minor", length=3.5, color=SOFT_INK)
     bar.set_label(words["colourbar"], fontsize=pt(LABEL_PX), color=INK, labelpad=10)
-    canvas.text(24, 712, words["note_parity"], NOTE_PX)
-    canvas.text(24, 742, words["note_spectral"], NOTE_PX)
 
     approved = set(words.values()) | set(order) | set(columns)
-    layout = audit_layout(canvas, approved)
+    layout = audit_layout(canvas, words, approved)
     layout["cell_label_contrast_min"] = worst
     meta = {
-        "source_files": ["figure-pack/accuracy.csv", "figure-pack/spectral.csv"],
+        "source_files": ["figure-pack/accuracy.csv"],
         "columns_used": {
             "case": "row label, verbatim",
             "m": "column (144, 288, 576)",
             "ratio": "cell colour and label; checked equal to trsk_l2 / torus_l2",
-            "trsk_cells, torus_unique": "column labels and the 1.2% note",
+            "trsk_cells, torus_unique": "column labels",
         },
         "row_order": order,
         "columns": [
@@ -620,10 +607,6 @@ def accuracy():
             "reason": "vmin is parity, vmax is the largest ratio, so no cell is clipped or saturated",
         },
         "label_rounding": "three significant figures; values of 1,000 or more to the nearest whole number",
-        "note_checks": {
-            "unique_cell_excess": [round(e, 5) for e in excess],
-            "spectral_torus_over_spectral_tc6_day14": spectral_ratios,
-        },
         "missing_values": (
             "torus_linf and trsk_linf are blank for the three TC6, day 5 rows; the figure uses only l2, "
             "which is present for all 18 pairs"
@@ -634,9 +617,7 @@ def accuracy():
             "Colour matrix of TRSK l2 height error divided by torus l2 height error, six test cases by "
             "three resolutions of about 10k, 41k and 165k unique cells. All 18 ratios are above 1, so the "
             "torus has lower error everywhere. Smallest are TC6 at day 14 (1.16x, 1.39x, 1.83x); largest "
-            "is the steady jet at 165k cells (3,182x). TC2 runs 99.7x to 659x. Notes say ratios above 1 "
-            "favour the torus, its unique-cell count is about 1.2% higher, and NCAR's spectral model is "
-            "about 1.9x more accurate on TC6 at day 14."
+            "is the steady jet at 165k cells (3,182x). TC2 runs 99.7x to 659x."
         ),
     }
     return "accuracy", canvas, words, meta, layout
@@ -654,18 +635,15 @@ def filter_trade():
         raise ValueError(f"unexpected resolutions {arcsec}")
     words = {
         "title": "A polar filter can win while bandwidth dominates",
-        "subtitle": "Optimistic model: same kernel, same unique-cell count",
         "x_axis": "Lat-lon grid spacing (arcseconds)",
         "y_axis": "Filtered lat-lon throughput / torus throughput",
         "reference": "Equal throughput",
-        "note_latency": "Whole-latitude filtering costs at least 3 node latencies per step in this model.",
-        "note_scope": "Patch-core overhead is omitted for both layouts. Filter accuracy was not tested.",
     }
     value_text = [times(v, 2) for v in ratio]
 
-    canvas = Canvas(height=770)
-    heading(canvas, words["title"], words["subtitle"])
-    left, top, width, height = 112, 118, 680, 480
+    canvas = Canvas(height=FILTER_H)
+    heading(canvas, words["title"])
+    left, top, width, height = 112, LINE_TOP, 680, 480
     ax = canvas.axes(left, top, width, height)
     tidy(ax)
     ax.set_xscale("log", base=2)
@@ -688,15 +666,13 @@ def filter_trade():
                     fontweight="bold", color=INK)
     ax.annotate(words["reference"], (0.985, 1.0), xycoords=ax.get_yaxis_transform(),
                 xytext=(0, 7), textcoords="offset points", ha="right", va="bottom",
-                fontsize=pt(NOTE_PX), color=SOFT_INK)
+                fontsize=pt(REFERENCE_PX), color=SOFT_INK)
     ax.set_xlabel(words["x_axis"], fontsize=pt(LABEL_PX), labelpad=10)
     ax.set_ylabel(words["y_axis"], fontsize=pt(LABEL_PX), labelpad=12)
-    canvas.text(24, 692, words["note_latency"], NOTE_PX)
-    canvas.text(24, 722, words["note_scope"], NOTE_PX)
     check_data_inside(ax, arcsec, ratio)
 
     approved = set(words.values())
-    layout = audit_layout(canvas, approved)
+    layout = audit_layout(canvas, words, approved)
     meta = {
         "source_files": ["figure-pack/filter_trade.csv"],
         "columns_used": {"arcsec": "x position", "filter_over_torus": "y position and value label"},
@@ -720,9 +696,7 @@ def filter_trade():
             "Line plot of modelled throughput of a latitude-longitude grid with a polar filter divided by "
             "torus throughput, for grid spacings from 15 to 960 arcseconds. The filtered grid is ahead by "
             "1.41x at 15 arcseconds, about 1.40x to 1.33x up to 240 arcseconds, then falls below the equal "
-            "throughput line to 0.72x at 480 and 0.62x at 960 arcseconds. Notes say whole-latitude "
-            "filtering costs at least 3 node latencies per step in this model, patch-core overhead is "
-            "omitted for both layouts and filter accuracy was not tested."
+            "throughput line to 0.72x at 480 and 0.62x at 960 arcseconds."
         ),
     }
     return "filter-trade", canvas, words, meta, layout
@@ -772,11 +746,6 @@ def export(name, canvas, words, meta, layout):
     }
     png, _ = render_png(fig, CSS_DPI * PNG_SCALE, info)
     targets[OUT / f"{name}.png"] = png
-    preview, image = render_png(fig, CSS_DPI, info)
-    targets[PREVIEW / f"{name}-830.png"] = preview
-    gray = io.BytesIO()
-    image.convert("L").save(gray, format="PNG", optimize=False)
-    targets[PREVIEW / f"{name}-830-grayscale.png"] = gray.getvalue()
     for path, data in targets.items():
         atomic_write(path, data)
         files[str(path.relative_to(ROOT))] = {"sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
@@ -795,7 +764,6 @@ def export(name, canvas, words, meta, layout):
             "canvas_css_px": [WIDTH, canvas.height],
             "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
             "png": f"{WIDTH * PNG_SCALE} x {canvas.height * PNG_SCALE} px, RGB, no alpha, for display at 830 CSS px",
-            "preview": f"{WIDTH} x {canvas.height} px screen-size copy and a grayscale copy in figures/preview/",
             "font": "DejaVu Sans (bundled with Matplotlib)",
             "background": "opaque white",
             "versions": {
