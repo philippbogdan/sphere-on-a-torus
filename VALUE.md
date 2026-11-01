@@ -1,5 +1,7 @@
 US$100,000 to US$10 million
 
+*This is a very rough estimate produced by GPT 6 Astra (max) for reference.*
+
 My estimate of the work's expected incremental value to weather, climate and scientific computing over the next ten years, with a central judgement of about US$1 million. Amounts are in roughly 2026 dollars, without discounting. The eventual realised benefit could be zero.
 
 The opportunity is cheaper global simulation through a periodic grid with bounded local communication, including near the poles. The supplied implementation and benchmark data make this a credible research contribution: saved results show lower height l2 error in all 18 paired comparisons against the project's own TRSK implementation. The method computes each physical point twice, and these comparisons establish neither operational forecast quality nor savings at equal accuracy. See the [method and numerical limits](docs/METHOD.md).
