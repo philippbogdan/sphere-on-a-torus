@@ -1,14 +1,24 @@
 # Sphere on a torus
 
-Global weather models must move fluid across the poles, where a latitude-longitude grid crowds points together and forces tiny time steps. `polarswe` solves the shallow-water equations on a periodic torus mapped twice onto the sphere, keeping a fixed 42-point reach everywhere. On 64 Cerebras CS-3 systems at 15 arcseconds (463 m), the Domain Translation cost model estimates **856x more simulated time per wall time** than an unfiltered, polar-limited grid, with no Cerebras hardware measurements.
+Global weather models must move fluid across the poles, where a latitude-longitude grid crowds points together and forces tiny time steps. `polarswe` solves the shallow-water equations on a periodic torus mapped twice onto the sphere. At nearly equal unique-cell counts, its measured normalised height $`l_2`$ error is **1.16x to 3,182x lower in all 18 paired comparisons** against this repository's TRSK implementation on generated MPAS-type meshes.
 
 <a href="figures/galewsky.mp4"><img src="figures/galewsky.gif" width="100%" alt="A perturbed jet curls into vortices on the sphere beside the same field on an unwrapped periodic torus; the torus shows both copies of the flow and all four cone points."></a>
 
 Six simulated days of the Galewsky jet at M = 512, shown on the sphere and its periodic torus grid. Colour shows relative vorticity on a fixed scale; dots mark the cone points, all four visible on the torus.
 
+## Lower height error in all 18 TRSK comparisons
+
+The [18 paired comparisons](figure-pack/accuracy.csv) cover five shallow-water test cases at three resolution pairs, with TC6 evaluated at both day 5 and day 14. These are CPU/GPU measurements of this repository's solvers, not the MPAS executable or Cerebras hardware. The torus uses about 1.2% more unique points and computes each twice.
+
+<a href="figures/accuracy.svg"><img src="figures/accuracy.png" width="100%" alt="All 18 TRSK-to-torus height error ratios exceed one, ranging from 1.16 to 3,182; the closest comparison is the Rossby-Haurwitz wave at day 14."></a>
+
+Each point is TRSK error divided by torus error for the same test and reference; values above one favour the torus. The finest mountain test approaches the reference's own uncertainty.
+
+TRSK has lower maximum error in two comparisons. NCAR's spectral model has about **1.9x lower TC6 day-14 $`l_2`$ error** at matched point counts. These are shallow-water tests, not full atmosphere models. [Norms, reference uncertainty and comparison limits](docs/METHOD.md#accuracy-comparisons).
+
 ## What avoiding the poles buys
 
-The torus takes fewer steps per second, but each step advances much more simulated time. The **856x model estimate** counts cone-patch work on the busiest core; sharing it gives a **1,263x estimate with an unimplemented schedule**.
+The torus keeps a fixed 42-point reach everywhere. It takes fewer steps per second, but each step advances much more simulated time. At 15 arcseconds (463 m) on 64 Cerebras CS-3 systems, the Domain Translation cost model estimates **856x more simulated time per wall time** than an unfiltered, polar-limited grid, with no Cerebras hardware measurements. This estimate counts cone-patch work on the busiest core; sharing it gives a **1,263x estimate with an unimplemented schedule**.
 
 <a href="figures/throughput.svg"><img src="figures/throughput.png" width="100%" alt="Modelled simulated time per wall time, relative to polar-limited latitude-longitude: 1 for the baseline, 856 for the torus with patch work counted, and 1,263 with estimated sharing."></a>
 
@@ -19,16 +29,6 @@ Modelled throughput at 15 arcseconds on 64 CS-3 systems, using extrapolated time
 Torus limits are 2.45, 2.32 and 2.25 equatorial wave-crossing times at M = 64, 128 and 256, tested over 50 simulated days. The unfiltered second-order latitude-longitude tests cover 5, 3 and 1 simulated days respectively; both sets use bisection to 2%.
 
 [Method and cone operators](docs/METHOD.md). [Stability definitions and throughput assumptions](docs/PERFORMANCE.md).
-
-## Lower height error in all 18 TRSK comparisons
-
-At nearly equal unique-cell counts, the torus has lower normalised height $`l_2`$ error in **all 18 paired comparisons** with the supplied TRSK implementation on generated MPAS-type meshes. It uses about 1.2% more unique points and computes each twice.
-
-<a href="figures/accuracy.svg"><img src="figures/accuracy.png" width="100%" alt="All 18 TRSK-to-torus height error ratios exceed one, ranging from 1.16 to 3,182; the closest comparison is the Rossby-Haurwitz wave at day 14."></a>
-
-Each point compares the same test and reference at one of three resolution pairs; values above one favour the torus. The finest mountain test approaches the reference's own uncertainty.
-
-TRSK has lower maximum error in two comparisons. NCAR's spectral model has about **1.9x lower TC6 day-14 $`l_2`$ error** at matched point counts. These are shallow-water tests, not full atmosphere models. [Norms, reference uncertainty and comparison limits](docs/METHOD.md#accuracy-comparisons).
 
 ## A polar filter can be faster
 
