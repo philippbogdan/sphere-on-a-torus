@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Check Runge-Kutta order conditions, stability and nonlinear convergence."""
 
 
 import sys, os, json

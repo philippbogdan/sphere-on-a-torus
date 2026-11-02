@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure steady-flow error growth and its distance from the cone points."""
 
 
 import sys, os, json, math, warnings

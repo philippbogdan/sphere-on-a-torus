@@ -1,4 +1,4 @@
-"""Build the double-cover grid. X has shape (3, M, M) on the unit sphere."""
+"""Construct periodic sphere grids, orientations and branch-point geometry."""
 
 
 import os, hashlib
@@ -19,10 +19,11 @@ def _save(fn, X):
 
 
 def torus_X(M, nsteps=200, Nf=256, verbose=False):
-    """Map an even M by M lattice to unit-sphere positions, shape (3, M, M).
+    """Return Cartesian unit-sphere positions for an even M by M lattice.
 
-    Sites (i, j) and (-1-i, -1-j), modulo M, share a position.
-    Cached maps are keyed by the source files that build them.
+    The array has shape (3, M, M). Sites (i, j) and (-1-i, -1-j),
+    modulo M, represent the same physical position.
+    The cache key includes the source files defining the map.
     """
     os.makedirs(CACHE, exist_ok=True)
     tag = "" if ellip.LATTICE == "hex" else f"_{ellip.LATTICE}"

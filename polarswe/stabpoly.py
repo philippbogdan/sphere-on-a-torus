@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Optimise stability polynomials on the imaginary axis with CVXPY."""
 
 
 import numpy as np

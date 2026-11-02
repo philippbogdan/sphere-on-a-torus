@@ -1,0 +1,78 @@
+{
+  "archive": "build/hero.npz",
+  "archive_sha256": "2150cb75f72cd5302c295e984e1c6e255e0552840e5637123b814445c7d5aa6a",
+  "archive_bytes": 455228958,
+  "case": "galewsky",
+  "M": 512,
+  "scheme": "order=8,integrator=ls10o4,courant=1.252,hv_mode=step,kappa=0.0001,cone=8_3_4_lines_cc_dw10,cone_filter=0,tracer=skew",
+  "dt_s": 197.4105102817974,
+  "nsteps": 2626,
+  "mean_spacing_m": 62383.90699347095,
+  "mass_rel": 0.0,
+  "branch_points_ij": [
+    [
+      -0.5,
+      -0.5
+    ],
+    [
+      255.5,
+      -0.5
+    ],
+    [
+      -0.5,
+      255.5
+    ],
+    [
+      255.5,
+      255.5
+    ]
+  ],
+  "frames": 293,
+  "first_t_s": 0.0,
+  "last_t_s": 518400.0,
+  "regular_snapshot_step_stride": 9,
+  "last_snapshot_step_stride": 7,
+  "arrays": {
+    "X": {
+      "shape": [
+        3,
+        512,
+        512
+      ],
+      "dtype": "float32"
+    },
+    "vorticity": {
+      "shape": [
+        293,
+        512,
+        512
+      ],
+      "dtype": "float32"
+    },
+    "height": {
+      "shape": [
+        293,
+        512,
+        512
+      ],
+      "dtype": "float32"
+    },
+    "t_s": {
+      "shape": [
+        293
+      ],
+      "dtype": "float64"
+    },
+    "branch_distance_cells": {
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "float32"
+    },
+    "meta": {
+      "shape": [],
+      "dtype": "<U368"
+    }
+  }
+}

@@ -1,4 +1,7 @@
-"""Fetch NCAR STSWM for local research use. It is not part of the CC0 release."""
+"""Download and hash-check NCAR STSWM for scientific research and education.
+
+The fetched archive retains UCAR's terms and is outside the CC0 dedication.
+Read THIRD_PARTY.md before use."""
 from pathlib import Path
 import hashlib
 import urllib.request
@@ -11,10 +14,10 @@ def main():
     with urllib.request.urlopen(URL) as response:
         data = response.read()
     if hashlib.sha256(data).hexdigest() != SHA256:
-        raise SystemExit('The upstream archive has changed. Check its source and terms before using it.')
+        raise SystemExit('Archive hash mismatch. Verify the distribution and its terms before use.')
     DEST.parent.mkdir(parents=True, exist_ok=True)
     DEST.write_bytes(data)
-    print('Fetched the checked NCAR archive. See docs/THIRD_PARTY.md for its research and education terms.')
+    print('Saved the hash-checked NCAR archive. See THIRD_PARTY.md for research and education terms.')
 
 if __name__ == '__main__':
     main()

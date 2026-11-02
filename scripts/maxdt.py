@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Bisect the stable time step and record both equatorial-spacing conventions."""
 
 
 import sys, os, json, subprocess, time, warnings
@@ -16,7 +16,7 @@ def git_commit():
 def setup(spec, name, scheme):
     from polarswe import ellip
     if spec[0] == "torus" and scheme.get("lattice", "hex") != ellip.LATTICE:
-        raise RuntimeError("lattice mismatch: set POLARSWE_LATTICE")
+        raise RuntimeError("The lattice differs from the scheme; set POLARSWE_LATTICE accordingly.")
     sc = ex.scheme_of({k: v for k, v in scheme.items() if k != "solver"})
     case = ex.make_case(name)
     X, info = ex.make_grid(spec, sc.get("orient"))
@@ -105,7 +105,7 @@ def main():
     ok_lo, _ = trial(lo, spec, name, days, scheme, ctx); log.append((lo, ok_lo))
     ok_hi, t_hi = trial(hi, spec, name, days, scheme, ctx); log.append((hi, ok_hi))
     if not ok_lo or ok_hi:
-        res = dict(error="bracket invalid", log=log)
+        res = dict(error="The initial bracket does not separate stable and unstable steps.", log=log)
     else:
         while (hi - lo) / lo > 0.02:
             mid = np.sqrt(lo * hi)

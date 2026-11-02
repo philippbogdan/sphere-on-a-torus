@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Compare interpolated initial NCAR heights with their analytic fields."""
 
 import sys, os, json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

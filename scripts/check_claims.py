@@ -1,4 +1,4 @@
-"""Recompute the headline numbers from saved measurements and the dataflow model."""
+"""Check saved-data integrity and recalculate the numerical comparisons."""
 from pathlib import Path
 import argparse
 import hashlib
@@ -23,7 +23,7 @@ def main_record(records, case, m):
     hits = [r for r in records if r.get('grid') == ['torus', m] and r.get('case') == case
             and r.get('spec', '').split(':', 3)[-1] == configs.MAIN]
     if len(hits) != 1:
-        raise ValueError(f'Expected one main record for {case}, M={m}; found {len(hits)}')
+        raise ValueError(f'Expected one main-scheme record for {case}, M={m}; found {len(hits)}.')
     return hits[0]
 
 
@@ -39,7 +39,7 @@ def calculate():
     kernel = df.dt_kernel('main', cost['flops'], df.EFFICIENCY_SWE, configs.STATE_WORDS,
                           cost['static_words'], cost['reach'])
     n_latlon = df.latlon_points(15)
-    # Match the lat-lon equatorial spacing by mean unique-cell area on the torus.
+    # Match nominal lat-lon equatorial spacing to the torus mean unique-cell area.
     unique_torus = df.AREA / 463.3 ** 2
     floor = df.config_rate(df.paper_kernel('swe'), n_latlon)
     patch = df.cone_patch_cost(kernel, cost['flops'], cost['cone_flops'], cost['cone_R'],
@@ -52,7 +52,7 @@ def calculate():
              dict(layout='Torus, shared patch work', relative=dt_ratio * patch['steps_per_s_redistributed'] / floor['rate'],
                   steps_per_s=patch['steps_per_s_redistributed'])]
     trade = []
-    # Table F holds the kernel and unique-point count fixed and omits patch-core work for all layouts.
+    # The filtered comparison fixes the kernel and unique-point count, omitting patch overhead.
     for arcsec in (15, 30, 60, 120, 240, 480, 960):
         n = df.latlon_points(arcsec)
         tor = df.approach_throughput('torus', n, kernel, steps[64]['r_max_unique'], polar_constant)
@@ -105,7 +105,7 @@ def verify(summary):
     for name, expected in manifest['sha256'].items():
         actual = hashlib.sha256((ROOT/'data'/name).read_bytes()).hexdigest()
         if actual != expected:
-            raise ValueError(f'Saved data changed: {name}')
+            raise ValueError(f'Data digest does not match the manifest: {name}')
     stamps = json.loads((ROOT/'data/source-stamps.json').read_text())
     assert set(stamps.values()) == {manifest['source_commit']}
     commits = {r['commit'] for p in (ROOT/'data').glob('*.jsonl') for r in rows(p.name) if r.get('commit')}
@@ -123,8 +123,8 @@ def verify(summary):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument('--out', type=Path, help='Write the calculated numbers as JSON.')
-    ap.add_argument('--rerun', action='store_true', help='Use newly computed data without checking the saved-data hashes or expected ranges.')
+    ap.add_argument('--out', type=Path, help='Save the calculated comparisons as JSON.')
+    ap.add_argument('--rerun', action='store_true', help='Calculate from new data without enforcing bundled-data hashes or headline ranges.')
     args = ap.parse_args()
     summary = calculate()
     if not args.rerun:
@@ -132,10 +132,10 @@ def main():
     if args.out:
         args.out.parent.mkdir(parents=True,exist_ok=True)
         args.out.write_text(json.dumps(summary,indent=2)+'\n')
-    print('Modelled speed ratios:', ', '.join(f"{r['relative']:.2f}" for r in summary['speed_model']))
-    print('TRSK comparisons:', len(summary['accuracy']), 'pairs; lowest l2 ratio:',f"{min(r['ratio'] for r in summary['accuracy']):.3f}")
-    print('Filter / torus:', ', '.join(f"{r['arcsec']}: {r['filter_over_torus']:.3f}" for r in summary['filter_trade_model']))
-    print('Saved evidence checks passed.' if not args.rerun else 'Calculated new results.')
+    print('Modelled simulated-time throughput ratios:', ', '.join(f"{r['relative']:.2f}" for r in summary['speed_model']))
+    print('Paired TRSK comparisons:', len(summary['accuracy']), 'pairs; minimum TRSK / torus l2:',f"{min(r['ratio'] for r in summary['accuracy']):.3f}")
+    print('Modelled filtered lat-lon / torus throughput (arcseconds: ratio):', ', '.join(f"{r['arcsec']}: {r['filter_over_torus']:.3f}" for r in summary['filter_trade_model']))
+    print('Bundled-data hashes and numerical checks passed.' if not args.rerun else 'New comparisons calculated without bundled-data checks.')
 
 if __name__ == '__main__':
     main()

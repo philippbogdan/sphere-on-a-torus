@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sphere-on-a-torus"
 version = "0.1.0"
-description = "Local shallow-water numerics for a sphere on a periodic processor grid"
+description = "A whole-sphere shallow-water solver with bounded local communication"
 requires-python = ">=3.11"
 license = "CC0-1.0"
 dependencies = ["numpy==2.4.6", "scipy==1.18.0", "numba==0.65.1"]

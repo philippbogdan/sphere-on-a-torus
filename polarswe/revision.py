@@ -1,4 +1,4 @@
-"""Identify the code used for a run without borrowing a parent checkout's revision."""
+"""Fingerprint numerical source files and retain an optional revision label."""
 from pathlib import Path
 import hashlib
 import os

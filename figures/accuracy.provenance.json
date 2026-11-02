@@ -1,237 +1,348 @@
 {
   "figure": "accuracy",
-  "wording": {
-    "title": "Lower height error in all 18 TRSK comparisons",
-    "x_axis": "Approximate unique-cell count",
-    "colourbar": "TRSK l2 / torus l2 (log scale)"
-  },
-  "source_data": {
-    "figure-pack/accuracy.csv": {
-      "sha256": "8bcb83b8ed0508a0e3cfba0a913d5553740ed46f4a293541bbbe676eb60f6fd4"
-    }
-  },
-  "source_origin": "figure-pack/ is written by scripts/prepare_figures.py from the saved measurements in data/ (checked against data/manifest.json); no earlier plot was read",
-  "uncertainty": "none shown and none exists: values are deterministic measured errors or model outputs, not replicate estimates",
-  "columns_used": {
-    "case": "row label, verbatim",
-    "m": "column (144, 288, 576)",
-    "ratio": "cell colour and label; checked equal to trsk_l2 / torus_l2",
-    "trsk_cells, torus_unique": "column labels"
-  },
-  "row_order": [
+  "labels": [
     "TC2, day 5",
     "TC5, day 15",
     "TC6, day 5",
     "TC6, day 14",
     "Steady jet, day 6",
-    "Perturbed jet, day 6"
+    "Perturbed jet, day 6",
+    "M = 144",
+    "M = 288",
+    "M = 576",
+    "Equal error",
+    "TRSK height l2 / torus height l2"
   ],
-  "columns": [
-    {
-      "label": "10k cells",
-      "M": 144,
-      "trsk_cells": 10242,
-      "torus_unique": 10368
-    },
-    {
-      "label": "41k cells",
-      "M": 288,
-      "trsk_cells": 40962,
-      "torus_unique": 41472
-    },
-    {
-      "label": "165k cells",
-      "M": 576,
-      "trsk_cells": 163842,
-      "torus_unique": 165888
+  "source_data": {
+    "figure-pack/accuracy.csv": {
+      "sha256": "8bcb83b8ed0508a0e3cfba0a913d5553740ed46f4a293541bbbe676eb60f6fd4"
     }
-  ],
-  "cells": [
-    {
-      "case": "TC2, day 5",
-      "column": "10k cells",
-      "ratio": 99.65012972007258,
-      "label": "99.7x",
-      "fill": "#6c6e72",
-      "text": "#FFFFFF",
-      "contrast": 5.1
-    },
-    {
-      "case": "TC2, day 5",
-      "column": "41k cells",
-      "ratio": 253.45888332185297,
-      "label": "253x",
-      "fill": "#535a6d",
-      "text": "#FFFFFF",
-      "contrast": 6.92
-    },
-    {
-      "case": "TC2, day 5",
-      "column": "165k cells",
-      "ratio": 658.6047084776967,
-      "label": "659x",
-      "fill": "#33446d",
-      "text": "#FFFFFF",
-      "contrast": 9.59
-    },
-    {
-      "case": "TC5, day 15",
-      "column": "10k cells",
-      "ratio": 9.958214298401284,
-      "label": "9.96x",
-      "fill": "#b3a670",
-      "text": "#111111",
-      "contrast": 7.74
-    },
-    {
-      "case": "TC5, day 15",
-      "column": "41k cells",
-      "ratio": 7.784088344778784,
-      "label": "7.78x",
-      "fill": "#baac6d",
-      "text": "#111111",
-      "contrast": 8.27
-    },
-    {
-      "case": "TC5, day 15",
-      "column": "165k cells",
-      "ratio": 2.78133194089623,
-      "label": "2.78x",
-      "fill": "#ddc858",
-      "text": "#111111",
-      "contrast": 11.26
-    },
-    {
-      "case": "TC6, day 5",
-      "column": "10k cells",
-      "ratio": 4.061323787987672,
-      "label": "4.06x",
-      "fill": "#d0be62",
-      "text": "#111111",
-      "contrast": 10.07
-    },
-    {
-      "case": "TC6, day 5",
-      "column": "41k cells",
-      "ratio": 6.31981231441119,
-      "label": "6.32x",
-      "fill": "#c1b26a",
-      "text": "#111111",
-      "contrast": 8.83
-    },
-    {
-      "case": "TC6, day 5",
-      "column": "165k cells",
-      "ratio": 9.368692436352465,
-      "label": "9.37x",
-      "fill": "#b4a76f",
-      "text": "#111111",
-      "contrast": 7.81
-    },
-    {
-      "case": "TC6, day 14",
-      "column": "10k cells",
-      "ratio": 1.1632732104993575,
-      "label": "1.16x",
-      "fill": "#fde334",
-      "text": "#111111",
-      "contrast": 14.54
-    },
-    {
-      "case": "TC6, day 14",
-      "column": "41k cells",
-      "ratio": 1.393637851140163,
-      "label": "1.39x",
-      "fill": "#f6dd3f",
-      "text": "#111111",
-      "contrast": 13.77
-    },
-    {
-      "case": "TC6, day 14",
-      "column": "165k cells",
-      "ratio": 1.832217846856318,
-      "label": "1.83x",
-      "fill": "#ebd44b",
-      "text": "#111111",
-      "contrast": 12.68
-    },
-    {
-      "case": "Steady jet, day 6",
-      "column": "10k cells",
-      "ratio": 3.696048265261776,
-      "label": "3.70x",
-      "fill": "#d3c05f",
-      "text": "#111111",
-      "contrast": 10.36
-    },
-    {
-      "case": "Steady jet, day 6",
-      "column": "41k cells",
-      "ratio": 332.19211395737364,
-      "label": "332x",
-      "fill": "#4a536c",
-      "text": "#FFFFFF",
-      "contrast": 7.62
-    },
-    {
-      "case": "Steady jet, day 6",
-      "column": "165k cells",
-      "ratio": 3181.8437743809272,
-      "label": "3,182x",
-      "fill": "#00224e",
-      "text": "#FFFFFF",
-      "contrast": 15.63
-    },
-    {
-      "case": "Perturbed jet, day 6",
-      "column": "10k cells",
-      "ratio": 7.216575433144628,
-      "label": "7.22x",
-      "fill": "#bdae6c",
-      "text": "#111111",
-      "contrast": 8.51
-    },
-    {
-      "case": "Perturbed jet, day 6",
-      "column": "41k cells",
-      "ratio": 33.22794426170593,
-      "label": "33.2x",
-      "fill": "#8c8878",
-      "text": "#111111",
-      "contrast": 5.29
-    },
-    {
-      "case": "Perturbed jet, day 6",
-      "column": "165k cells",
-      "ratio": 46.93787788067456,
-      "label": "46.9x",
-      "fill": "#817f78",
-      "text": "#111111",
-      "contrast": 4.74
-    }
-  ],
-  "colour": {
-    "map": "cividis_r",
-    "norm": "LogNorm",
-    "vmin": 1.0,
-    "vmax": 3181.8437743809272,
-    "reason": "vmin is parity, vmax is the largest ratio, so no cell is clipped or saturated"
   },
-  "label_rounding": "three significant figures; values of 1,000 or more to the nearest whole number",
-  "missing_values": "torus_linf and trsk_linf are blank for the three TC6, day 5 rows; the figure uses only l2, which is present for all 18 pairs",
-  "status": "deterministic l2 height errors from single runs; no replicates, no interval",
-  "scope": "TRSK as implemented in this repository on generated icosahedral meshes; MPAS itself was not run",
-  "alt_text": "Colour matrix of TRSK l2 height error divided by torus l2 height error, six test cases by three resolutions of about 10k, 41k and 165k unique cells. All 18 ratios are above 1, so the torus has lower error everywhere. Smallest are TC6 at day 14 (1.16x, 1.39x, 1.83x); largest is the steady jet at 165k cells (3,182x). TC2 runs 99.7x to 659x.",
-  "render": {
-    "script": "scripts/make_figures.py",
-    "canvas_css_px": [
-      830,
-      682
+  "plotted": [
+    {
+      "row": "TC2, day 5",
+      "m": 144,
+      "ratio": 99.65012972007258
+    },
+    {
+      "row": "TC2, day 5",
+      "m": 288,
+      "ratio": 253.45888332185297
+    },
+    {
+      "row": "TC2, day 5",
+      "m": 576,
+      "ratio": 658.6047084776967
+    },
+    {
+      "row": "TC5, day 15",
+      "m": 144,
+      "ratio": 9.958214298401284
+    },
+    {
+      "row": "TC5, day 15",
+      "m": 288,
+      "ratio": 7.784088344778784
+    },
+    {
+      "row": "TC5, day 15",
+      "m": 576,
+      "ratio": 2.78133194089623
+    },
+    {
+      "row": "TC6, day 5",
+      "m": 144,
+      "ratio": 4.061323787987672
+    },
+    {
+      "row": "TC6, day 5",
+      "m": 288,
+      "ratio": 6.31981231441119
+    },
+    {
+      "row": "TC6, day 5",
+      "m": 576,
+      "ratio": 9.368692436352465
+    },
+    {
+      "row": "TC6, day 14",
+      "m": 144,
+      "ratio": 1.1632732104993575
+    },
+    {
+      "row": "TC6, day 14",
+      "m": 288,
+      "ratio": 1.393637851140163
+    },
+    {
+      "row": "TC6, day 14",
+      "m": 576,
+      "ratio": 1.832217846856318
+    },
+    {
+      "row": "Steady jet, day 6",
+      "m": 144,
+      "ratio": 3.696048265261776
+    },
+    {
+      "row": "Steady jet, day 6",
+      "m": 288,
+      "ratio": 332.19211395737364
+    },
+    {
+      "row": "Steady jet, day 6",
+      "m": 576,
+      "ratio": 3181.8437743809272
+    },
+    {
+      "row": "Perturbed jet, day 6",
+      "m": 144,
+      "ratio": 7.216575433144628
+    },
+    {
+      "row": "Perturbed jet, day 6",
+      "m": 288,
+      "ratio": 33.22794426170593
+    },
+    {
+      "row": "Perturbed jet, day 6",
+      "m": 576,
+      "ratio": 46.93787788067456
+    }
+  ],
+  "checks": {
+    "ratio_equals_trsk_l2_over_torus_l2": [
+      {
+        "case": "TC2, day 5",
+        "m": 144,
+        "ratio": 99.65012972007258,
+        "recomputed": 99.65012972007258,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "TC5, day 15",
+        "m": 144,
+        "ratio": 9.958214298401284,
+        "recomputed": 9.958214298401284,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "TC6, day 14",
+        "m": 144,
+        "ratio": 1.1632732104993575,
+        "recomputed": 1.1632732104993575,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "TC6, day 5",
+        "m": 144,
+        "ratio": 4.061323787987672,
+        "recomputed": 4.061323787987672,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "Steady jet, day 6",
+        "m": 144,
+        "ratio": 3.696048265261776,
+        "recomputed": 3.696048265261776,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "Perturbed jet, day 6",
+        "m": 144,
+        "ratio": 7.216575433144628,
+        "recomputed": 7.216575433144628,
+        "torus_unique": 10368,
+        "trsk_cells": 10242
+      },
+      {
+        "case": "TC2, day 5",
+        "m": 288,
+        "ratio": 253.45888332185297,
+        "recomputed": 253.45888332185297,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "TC5, day 15",
+        "m": 288,
+        "ratio": 7.784088344778784,
+        "recomputed": 7.784088344778784,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "TC6, day 14",
+        "m": 288,
+        "ratio": 1.393637851140163,
+        "recomputed": 1.393637851140163,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "TC6, day 5",
+        "m": 288,
+        "ratio": 6.31981231441119,
+        "recomputed": 6.31981231441119,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "Steady jet, day 6",
+        "m": 288,
+        "ratio": 332.19211395737364,
+        "recomputed": 332.19211395737364,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "Perturbed jet, day 6",
+        "m": 288,
+        "ratio": 33.22794426170593,
+        "recomputed": 33.22794426170593,
+        "torus_unique": 41472,
+        "trsk_cells": 40962
+      },
+      {
+        "case": "TC2, day 5",
+        "m": 576,
+        "ratio": 658.6047084776967,
+        "recomputed": 658.6047084776967,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      },
+      {
+        "case": "TC5, day 15",
+        "m": 576,
+        "ratio": 2.78133194089623,
+        "recomputed": 2.78133194089623,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      },
+      {
+        "case": "TC6, day 14",
+        "m": 576,
+        "ratio": 1.832217846856318,
+        "recomputed": 1.832217846856318,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      },
+      {
+        "case": "TC6, day 5",
+        "m": 576,
+        "ratio": 9.368692436352465,
+        "recomputed": 9.368692436352465,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      },
+      {
+        "case": "Steady jet, day 6",
+        "m": 576,
+        "ratio": 3181.8437743809272,
+        "recomputed": 3181.8437743809272,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      },
+      {
+        "case": "Perturbed jet, day 6",
+        "m": 576,
+        "ratio": 46.93787788067456,
+        "recomputed": 46.93787788067456,
+        "torus_unique": 165888,
+        "trsk_cells": 163842
+      }
     ],
-    "svg": "622.5 pt wide, which is 830 CSS px; text converted to paths so it renders identically without DejaVu Sans installed; a colour-bar gradient, where present, is embedded as a raster at 4x CSS density",
-    "png": "1660 x 1364 px, RGB, no alpha, for display at 830 CSS px",
-    "font": "DejaVu Sans (bundled with Matplotlib)",
-    "background": "opaque white",
+    "torus_unique_is_m_squared_over_2": true,
+    "trsk_cells_is_10_times_4_to_level_plus_2": {
+      "144": 5,
+      "288": 6,
+      "576": 7
+    },
+    "min_ratio": 1.1632732104993575,
+    "max_ratio": 3181.8437743809272,
+    "all_above_one": true,
+    "tc6_day14_ratios": {
+      "144": 1.1632732104993575,
+      "288": 1.393637851140163,
+      "576": 1.832217846856318
+    },
+    "linf_plotted": false
+  },
+  "axes": {
+    "x": {
+      "scale": "log",
+      "range": [
+        0.8,
+        5000
+      ],
+      "ticks": [
+        1,
+        10,
+        100,
+        1000
+      ]
+    }
+  },
+  "marks": {
+    "144": {
+      "shape": "circle",
+      "fill": "#A9D2EE",
+      "outline": "#14222E"
+    },
+    "288": {
+      "shape": "square",
+      "fill": "#3E8FC9",
+      "outline": "#14222E"
+    },
+    "576": {
+      "shape": "triangle",
+      "fill": "#0B3F66",
+      "outline": "#14222E"
+    }
+  },
+  "text_audit": {
+    "labels": [
+      "Equal error",
+      "TRSK height l2 / torus height l2",
+      "TC2, day 5",
+      "TC5, day 15",
+      "TC6, day 5",
+      "TC6, day 14",
+      "Steady jet, day 6",
+      "Perturbed jet, day 6",
+      "M = 144",
+      "M = 288",
+      "M = 576"
+    ],
+    "numeric": [
+      "1",
+      "10",
+      "100",
+      "1,000"
+    ],
+    "min_text_px": 16.0
+  },
+  "render": {
+    "canvas_px": [
+      1000,
+      540
+    ],
+    "png_px": [
+      2000,
+      1080
+    ],
+    "svg_text": "outlined paths",
+    "font": "Arial.ttf",
+    "colours": {
+      "torus": "#0072B2",
+      "lat_lon": "#D55E00",
+      "baseline": "#333333"
+    },
     "versions": {
       "python": "3.14.7",
       "matplotlib": "3.11.1",
@@ -239,371 +350,14 @@
       "pillow": "12.2.0"
     }
   },
-  "layout_audit": {
-    "texts": [
-      {
-        "text": "10k cells",
-        "px": 17.0,
-        "box_css_px": [
-          286.5,
-          549.7,
-          361.5,
-          566.8
-        ]
-      },
-      {
-        "text": "41k cells",
-        "px": 17.0,
-        "box_css_px": [
-          470.5,
-          549.7,
-          545.5,
-          566.8
-        ]
-      },
-      {
-        "text": "165k cells",
-        "px": 17.0,
-        "box_css_px": [
-          649.0,
-          549.7,
-          735.0,
-          566.8
-        ]
-      },
-      {
-        "text": "Approximate unique-cell count",
-        "px": 18.0,
-        "box_css_px": [
-          371.0,
-          578.4,
-          645.0,
-          596.8
-        ]
-      },
-      {
-        "text": "TC2, day 5",
-        "px": 17.0,
-        "box_css_px": [
-          127.0,
-          496.4,
-          216.0,
-          513.5
-        ]
-      },
-      {
-        "text": "TC5, day 15",
-        "px": 17.0,
-        "box_css_px": [
-          116.0,
-          432.4,
-          216.0,
-          449.5
-        ]
-      },
-      {
-        "text": "TC6, day 5",
-        "px": 17.0,
-        "box_css_px": [
-          127.0,
-          368.4,
-          216.0,
-          385.5
-        ]
-      },
-      {
-        "text": "TC6, day 14",
-        "px": 17.0,
-        "box_css_px": [
-          116.0,
-          304.4,
-          216.0,
-          321.5
-        ]
-      },
-      {
-        "text": "Steady jet, day 6",
-        "px": 17.0,
-        "box_css_px": [
-          73.0,
-          240.4,
-          216.0,
-          257.5
-        ]
-      },
-      {
-        "text": "Perturbed jet, day 6",
-        "px": 17.0,
-        "box_css_px": [
-          48.6,
-          176.4,
-          216.0,
-          193.5
-        ]
-      },
-      {
-        "text": "99.7x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          497.5,
-          353.0,
-          516.5
-        ]
-      },
-      {
-        "text": "253x",
-        "px": 19.0,
-        "box_css_px": [
-          482.5,
-          497.5,
-          533.5,
-          516.5
-        ]
-      },
-      {
-        "text": "659x",
-        "px": 19.0,
-        "box_css_px": [
-          666.5,
-          497.5,
-          717.5,
-          516.5
-        ]
-      },
-      {
-        "text": "9.96x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          433.5,
-          353.0,
-          452.5
-        ]
-      },
-      {
-        "text": "7.78x",
-        "px": 19.0,
-        "box_css_px": [
-          479.0,
-          433.5,
-          537.0,
-          452.5
-        ]
-      },
-      {
-        "text": "2.78x",
-        "px": 19.0,
-        "box_css_px": [
-          663.0,
-          433.5,
-          721.0,
-          452.5
-        ]
-      },
-      {
-        "text": "4.06x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          369.5,
-          353.0,
-          388.5
-        ]
-      },
-      {
-        "text": "6.32x",
-        "px": 19.0,
-        "box_css_px": [
-          479.0,
-          369.5,
-          537.0,
-          388.5
-        ]
-      },
-      {
-        "text": "9.37x",
-        "px": 19.0,
-        "box_css_px": [
-          663.0,
-          369.5,
-          721.0,
-          388.5
-        ]
-      },
-      {
-        "text": "1.16x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          305.5,
-          353.0,
-          324.5
-        ]
-      },
-      {
-        "text": "1.39x",
-        "px": 19.0,
-        "box_css_px": [
-          479.0,
-          305.5,
-          537.0,
-          324.5
-        ]
-      },
-      {
-        "text": "1.83x",
-        "px": 19.0,
-        "box_css_px": [
-          663.0,
-          305.5,
-          721.0,
-          324.5
-        ]
-      },
-      {
-        "text": "3.70x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          241.5,
-          353.0,
-          260.5
-        ]
-      },
-      {
-        "text": "332x",
-        "px": 19.0,
-        "box_css_px": [
-          482.5,
-          241.5,
-          533.5,
-          260.5
-        ]
-      },
-      {
-        "text": "3,182x",
-        "px": 19.0,
-        "box_css_px": [
-          656.5,
-          241.5,
-          727.5,
-          260.5
-        ]
-      },
-      {
-        "text": "7.22x",
-        "px": 19.0,
-        "box_css_px": [
-          295.0,
-          177.5,
-          353.0,
-          196.5
-        ]
-      },
-      {
-        "text": "33.2x",
-        "px": 19.0,
-        "box_css_px": [
-          479.0,
-          177.5,
-          537.0,
-          196.5
-        ]
-      },
-      {
-        "text": "46.9x",
-        "px": 19.0,
-        "box_css_px": [
-          663.0,
-          177.5,
-          721.0,
-          196.5
-        ]
-      },
-      {
-        "text": "1",
-        "px": 17.0,
-        "box_css_px": [
-          226.5,
-          58.0,
-          237.5,
-          75.0
-        ]
-      },
-      {
-        "text": "10",
-        "px": 17.0,
-        "box_css_px": [
-          378.6,
-          58.0,
-          400.6,
-          75.0
-        ]
-      },
-      {
-        "text": "100",
-        "px": 17.0,
-        "box_css_px": [
-          530.7,
-          58.0,
-          563.7,
-          75.0
-        ]
-      },
-      {
-        "text": "1,000",
-        "px": 17.0,
-        "box_css_px": [
-          680.3,
-          58.0,
-          729.3,
-          75.0
-        ]
-      },
-      {
-        "text": "TRSK l2 / torus l2 (log scale)",
-        "px": 18.0,
-        "box_css_px": [
-          381.5,
-          26.3,
-          634.5,
-          44.7
-        ]
-      },
-      {
-        "text": "Lower height error in all 18 TRSK comparisons",
-        "px": 25.0,
-        "box_css_px": [
-          24.0,
-          635.0,
-          682.0,
-          660.0
-        ]
-      }
-    ],
-    "min_text_px": 17.0,
-    "min_edge_gap_px": 22.0,
-    "text_count": 34,
-    "checks": [
-      "no notes: only the title, axis labels, tick labels, row and column names, value labels and the reference-line label",
-      "only approved wording or numbers",
-      "no em dash, en dash, curly quote or unicode minus",
-      "every text at least 14 CSS px",
-      "every text at least 6 CSS px inside the canvas",
-      "no two texts overlap (2 px clearance)",
-      "no text over a data marker or data line (2 px clearance)"
-    ],
-    "cell_label_contrast_min": 4.74
-  },
   "outputs": {
     "figures/accuracy.svg": {
-      "sha256": "14e9ab45ca53eff263e9556dccbde11c085e12d1beba536cb87a50163212d90f",
-      "bytes": 72149
+      "sha256": "0ae0352aa3b397bb173e21ff6102bf469af4bfb55b900e529a7a264572819db5",
+      "bytes": 39189
     },
     "figures/accuracy.png": {
-      "sha256": "1710068e3ef8ab5c2699ac5012b42143d56365d1e1c59c9d081e68f7cefe9bc1",
-      "bytes": 117620
+      "sha256": "6edbd4e98cee5bcb70b63ce1979706059af5a79ce7faefd96a31f8f8d8b55399",
+      "bytes": 67206
     }
   }
 }

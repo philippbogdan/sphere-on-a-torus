@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Evaluate a staggered Lax-Wendroff update and area-weighted error norms."""
 
 
 import numpy as np
@@ -30,7 +30,7 @@ class CellGeom:
         self.n = n
         s = np.sign(_dot(np.cross(C10 - C00, C01 - C00, axis=0), n))
         if not (np.all(s == s.flat[0])):
-            raise ValueError("cells with mixed orientation")
+            raise ValueError("Cell orientations are inconsistent.")
         self.s = s.flat[0]
         self.T, self.N = [], []
         for a, b in zip(corners, corners[1:] + corners[:1]):

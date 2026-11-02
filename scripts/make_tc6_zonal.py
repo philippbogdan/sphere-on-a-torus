@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Write TC6 initial fields with an RMS-normalised zonal height perturbation."""
 
 import sys, os, math
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

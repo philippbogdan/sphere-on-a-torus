@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Compare map distortion and operator errors near and away from the cones."""
 
 
 import sys, os, json, warnings

@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Evaluate case specifications and append their numerical scores as JSONL."""
 
 
 import sys, os, json, subprocess, multiprocessing as mp, traceback, warnings

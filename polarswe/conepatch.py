@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Fit sparse cone corrections with adjustable consistency constraints."""
 
 
 import numpy as np
@@ -159,7 +159,7 @@ class ConePatch:
                 dH[nself[0]] -= tot - (tot @ Xf[q]) * Xf[q]
         w = wn.copy(); w[pts] += x[2 * npair:]
         if (w <= 0).any():
-            raise ValueError("corrected mass weights not positive")
+            raise ValueError("Corrected mass weights must be positive.")
         self.w_range = (float((w[pts] / wn[pts]).min()), float((w[pts] / wn[pts]).max()))
 
         kp = sorted(pq for pq in K0 if mask[pq[1]])

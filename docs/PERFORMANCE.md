@@ -1,21 +1,77 @@
-# Speed-model assumptions
+# What the throughput model predicts
 
-The headline comparison uses an 8 by 8 torus of CS-3 nodes at nominal equatorial spacing 463.3 m. Sphere area divided by spacing squared gives 2.38 billion unique torus points and 4.75 billion computed points. The lat-lon baseline has 86,400 by 43,200 points.
+At 15 arcseconds (463.3 m nominal equatorial spacing), the model predicts 856x more simulated time per wall time than an unfiltered, polar-limited latitude-longitude grid on 64 CS-3 systems. It combines modelled step rates with extrapolated time steps; there are no Cerebras hardware measurements.
 
-The baseline uses the [Domain Translation paper's](https://arxiv.org/html/2511.11542v2) cost model: `1026 + 183.2 n + 137.6 n squared` cycles per step and `64 n + 80` received words per core. Its polar timestep is extrapolated from second-order centred/RK4 measurements, not measured for the paper's Lax-Wendroff implementation.
+| Layout | Modelled steps/s | Modelled simulated time per wall time, relative to baseline |
+|---|---:|---:|
+| Polar-limited latitude-longitude | 27,257.8 | 1 |
+| Torus, patch work on the busiest core | 1,413.3 | 855.80 |
+| Torus, shared patch work, unimplemented estimate | 2,085.3 | 1,262.69 |
 
-## Machine and kernel
+Both torus estimates require coefficient distribution or streaming to fit core memory. The values are in [`throughput.csv`](../figure-pack/throughput.csv); [`check_claims.py`](../scripts/check_claims.py) reconstructs them from stability measurements and the dataflow model.
 
-The model assumes 744 by 1,116 cores per node, 0.75 GHz, two FP32 operations per cycle, 300 Gbit/s per wafer side and direction, 10 microseconds node latency and 12 ns average core-link latency. It transfers the paper's 53% compute utilisation to this kernel and assumes an equal directional split of the baseline's unpublished traffic.
+## The denominator matters
 
-The torus counts 2,163 operations per point per step, including metric reconstruction. Each edge point sends 420 words: 252 state and 168 position/topography words. Translations cover 42 points. The baseline's constant and linear cycle terms scale with the traffic ratio, an assumption.
+The baseline extends the Domain Translation cost model of [Oppelstrup et al., arXiv:2511.11542](https://arxiv.org/abs/2511.11542) with a polar time-step limit. The paper does not disclose its pole treatment. The limit is extrapolated from a second-order centred/RK4 solver, not measured for the paper's Lax-Wendroff implementation.
 
-The 920 cone-patch points each need 151 extra coefficient words and 2.43x the interior work. Counting the worst core gives 1,413 steps/s; sharing over 42 nearby cores gives an estimated 2,085 steps/s. The baseline gives 27,258 steps/s. An extrapolated torus timestep 16,505x longer gives the README's throughput ratios.
+At this spacing the torus step is extrapolated to be 16,505x longer. Multiplying that ratio by the modelled step-rate ratio gives the headline:
 
-A worst-aligned core holding all 96 patch points' coefficients would need about 70.5 kB against the assumed 48 kB. Both estimates require distribution or streaming. The shared model spreads storage over nearby cores, but neither its schedule nor communication has been implemented or timed. See the [porting requirements](PORT.md).
+```math
+\frac{\text{torus simulated time / wall time}}{\text{baseline simulated time / wall time}}
+=
+\frac{\text{torus steps/s}}{\text{baseline steps/s}}
+\frac{\Delta t_{torus}}{\Delta t_{baseline}}.
+```
 
-## Checks and scope
+The 15-arcsecond torus case was not simulated. Its time step is extrapolated from M = 256. The layout has about 2.38 billion unique torus points and 4.75 billion computed points; the latitude-longitude baseline has 86,400 by 43,200 points. Nominal equatorial spacing sets these counts, rather than equal accuracy or equal work.
 
-TC5 stability limits were bisected to 2% over 50 simulated days at M=64, 128 and 256. The extrapolation uses M=256; the 15-arcsecond simulation was not run. The inherited model matches compute-bound heat-equation rates read from the paper within 1%, but is 9% to 35% optimistic for I/O-bound rates. This checks the model, not hardware performance of the new solver.
+## Kernel and memory
 
-The polar-filter comparison instead fixes the per-point kernel and unique-point count. It assumes the torus timestep and at least three node latencies for a whole-latitude filter, without costing a specific FFT. It omits cone-patch core overhead on both layouts. Bandwidth favours one copy at fine resolution; filter latency dominates at coarse resolution. Its ratios cannot be combined with the polar-limited headline.
+The model arranges 64 CS-3 systems in an 8 by 8 torus. [`dataflow.py`](../polarswe/dataflow.py) contains the assumed core array, clock, directional bandwidth, latencies and cost coefficients. The solver inherits the paper's compute utilisation; baseline traffic is assumed to split equally between directions, and traffic ratios scale the baseline's constant and linear cycle costs.
+
+[`model.json`](../figure-pack/model.json) records 2,163 operations per point per step and a full-step reach of 42. The payload packs depth and tangent velocity into three moving words, alongside four static position/topography words. Metric reconstruction and corner traffic are included.
+
+The four cone patches contain 920 points in total. Each needs 151 extra coefficient words and about 2.43x the interior work. In the worst alignment, one core contains 96 patch points. Keeping coefficients and the assumed working arrays there needs about 70.5 kB against 48 kB of assumed core memory. The modelled rate with work counted on that core is therefore not yet an executable hardware result.
+
+The shared estimate spreads patch work over 42 nearby cores. It raises the modelled rate to 2,085.3 steps/s, but the sharing schedule and its communication have not been implemented or timed. Both layouts need a concrete storage solution. [Porting requirements](PORT.md#porting-to-a-local-dataflow-machine).
+
+Calibration against compute-bound heat-equation rates read from the Domain Translation paper agrees within 1%. The model is about 9% to 36% optimistic for I/O-bound rates. The six relative errors are retained in `calibration` in [`model.json`](../figure-pack/model.json). Those comparisons check the inherited model, not the hardware performance of this solver.
+
+## Stable step
+
+[`timestep.jsonl`](../data/timestep.jsonl) stores the stability brackets. The plotted quantity is the largest accepted step divided by an equatorial wave-crossing time:
+
+```math
+r = \frac{\Delta t_{max} c_{max}}{\Delta x_{eq}},
+\qquad
+\Delta x_{eq} = \frac{\pi a}{\sqrt{N_{computed}/2}}.
+```
+
+Here $`a`$ is sphere radius and $`c_{max}`$ is the initial maximum gravity-wave speed plus the maximum flow speed. This computed-point convention includes both copies of the sphere; it is not the minimum polar-cell width.
+
+| Grid | Width | Equatorial spacing (km) | Stable step (wave-crossing times) | Simulated duration (days) |
+|---|---:|---:|---:|---:|
+| Torus | M = 64 | 442.3 | 2.449 | 50 |
+| Torus | M = 128 | 221.1 | 2.316 | 50 |
+| Torus | M = 256 | 110.6 | 2.252 | 50 |
+| Unfiltered latitude-longitude | 45 latitudes | 314.5 | 0.164 | 5 |
+| Unfiltered latitude-longitude | 90 latitudes | 157.3 | 0.082 | 3 |
+| Unfiltered latitude-longitude | 180 latitudes | 78.6 | 0.041 | 1 |
+
+All brackets were bisected to 2%. The latitude-longitude values use second-order centred differences and RK4. Their decreasing test durations matter: this is evidence of polar step-size scaling, not a matched-duration stability comparison. The [plot table](../figure-pack/stable_step_vs_spacing.csv) retains exact spacings, normalised limits and limits in seconds.
+
+## A separate polar-filter model
+
+A whole-latitude filter relaxes the polar restriction but adds non-local communication. Holding the kernel and unique-point count fixed, the model gives the following filtered latitude-longitude throughput divided by torus throughput:
+
+| Spacing (arcseconds) | Modelled filter / torus throughput |
+|---:|---:|
+| 15 | 1.411 |
+| 30 | 1.408 |
+| 60 | 1.403 |
+| 120 | 1.392 |
+| 240 | 1.335 |
+| 480 | 0.718 |
+| 960 | 0.621 |
+
+This comparison assumes the torus time step for both layouts, omits cone-patch overhead and charges at least three CS-3 system latencies per filter step. It does not cost a specific FFT or test the filter's effect on accuracy. One copy saves bandwidth at fine spacing; filter latency limits the coarser cases. The [ratios](../figure-pack/filter_trade.csv) have a different denominator from the polar-limited headline and cannot be combined with it.

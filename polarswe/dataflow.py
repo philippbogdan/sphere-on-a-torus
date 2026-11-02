@@ -1,4 +1,4 @@
-"""Estimate step rates and link traffic. These are models, not hardware timings."""
+"""Model CS-3 step rates, local communication and cone-patch costs."""
 
 
 from dataclasses import dataclass, field
@@ -9,21 +9,21 @@ WORD_BITS = 32
 
 @dataclass
 class Machine:
-    nodes_x: int = 8
-    nodes_y: int = 8
+    systems_x: int = 8
+    systems_y: int = 8
     cores_w: int = 744
     cores_h: int = 1116
     clock_hz: float = 0.75e9
     peak_flop_per_cycle: float = 2.0
     side_bw_bits: float = 300e9
-    node_latency_s: float = 10e-6
+    system_latency_s: float = 10e-6
     core_link_latency_s: float = 12e-9
     sram_bytes_per_core: int = 48 * 1024
     balanced_io: bool = False
 
     @property
-    def nodes(self):
-        return self.nodes_x * self.nodes_y
+    def systems(self):
+        return self.systems_x * self.systems_y
 
     @property
     def side_words_per_s(self):
@@ -75,7 +75,7 @@ def dt_kernel(name, flops_per_point, efficiency, state_words, static_words, reac
 
 
     corner = 0.0
-    node_corner = translations * (4 * reach * reach * state_words + reach * reach * static_words)
+    system_corner = translations * (4 * reach * reach * state_words + reach * reach * static_words)
     c2 = flops_per_point / (2.0 * efficiency)
     swe = PAPER_MODELS["swe"]
     ratio = words_strip / 32.0
@@ -85,22 +85,22 @@ def dt_kernel(name, flops_per_point, efficiency, state_words, static_words, reac
         c0 = swe["f"][0] * ratio
     k = Kernel(name, c0, c1, c2, flops_per_point, words_strip, corner, words_strip, corner,
                reach=reach * translations, words_per_point_resident=resident_words, notes=notes)
-    k.node_corner_words = node_corner
+    k.system_corner_words = system_corner
     return k
 
 
 def step_time(kernel, n, mach=Machine(), nx=None, ny=None):
-    """Return seconds, rate and the largest of compute, I/O and latency limits.
+    """Return modelled step time, rate and the limiting resource.
 
-    n is the width of a square window per core. nx and ny allow a rectangle.
-    Bandwidth is per wafer side and direction. Corner traffic is counted once per node.
+    n is the square window width per core; nx and ny specify a rectangle.
+    Bandwidth is per wafer side and direction; corner traffic is per CS-3 system.
     """
     nx = n if nx is None else nx
     ny = n if ny is None else ny
     neff = math.sqrt(nx * ny)
     t_comp = kernel.cycles(neff) / mach.clock_hz
 
-    nc = getattr(kernel, "node_corner_words", 0.0)
+    nc = getattr(kernel, "system_corner_words", 0.0)
     H = mach.cores_h * (kernel.wh1 * ny + kernel.wh0) + nc
     V = mach.cores_w * (kernel.wv1 * nx + kernel.wv0) + nc
     if mach.balanced_io:
@@ -135,8 +135,8 @@ def latlon_points(arcsec):
 
 
 def config_rate(kernel, npts, mach=Machine()):
-    """Spread npts computed points over all cores and evaluate the step model."""
-    per_core = npts / (mach.nodes * mach.cores_w * mach.cores_h)
+    """Distribute computed points uniformly over the modelled cores and estimate rate."""
+    per_core = npts / (mach.systems * mach.cores_w * mach.cores_h)
     n = math.sqrt(per_core)
     s = step_time(kernel, n, mach)
     s.update(points_per_core=per_core, n=n)
@@ -150,7 +150,7 @@ def link_report(kernel, s, mach=Machine()):
     bw = mach.side_words_per_s
     n = s["n"]
     core_link_words = kernel.wh1 * n + kernel.wh0
-    return dict(node_edge_words_H=H, node_edge_words_V=V,
+    return dict(system_edge_words_H=H, system_edge_words_V=V,
                 link_utilisation_H=H / bw / s["t"], link_utilisation_V=V / bw / s["t"],
                 core_link_words=core_link_words,
                 core_link_utilisation=core_link_words / (s["t"] * mach.clock_hz))
@@ -166,7 +166,7 @@ def approach_throughput(approach, n_unique, kernel, r_unique, C_polar, mach=Mach
     computed = 2 * n_unique if approach == "torus" else n_unique
     s = config_rate(kernel, computed, mach)
     t = s["t"]
-    cap = {"single_cover": mach.node_latency_s, "latlon_filter": 3 * mach.node_latency_s}.get(approach, 0.0)
+    cap = {"single_cover": mach.system_latency_s, "latlon_filter": 3 * mach.system_latency_s}.get(approach, 0.0)
     limit = s["limit"]
     if cap > t:
         t, limit = cap, "latency"

@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Fit tangent-plane gradients on local hexagonal neighbourhoods."""
 
 
 import numpy as np

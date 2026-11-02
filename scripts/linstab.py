@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure linearised eigenvalue growth for local shallow-water formulations."""
 
 
 import sys, os, json, math, warnings

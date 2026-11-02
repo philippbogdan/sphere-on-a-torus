@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Map the periodic lattice to the sphere through Weierstrass functions."""
 
 
 import numpy as np

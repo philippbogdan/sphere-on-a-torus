@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Score NCAR heights against analytic fields and finer numerical references."""
 
 
 import sys, os, json

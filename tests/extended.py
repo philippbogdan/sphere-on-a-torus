@@ -1,4 +1,4 @@
-"""Run the longer cone, precision and configuration checks explicitly."""
+"""Check full cone fits, precision wrappers and alternative configurations."""
 import json, os, math
 import numpy as np
 import pytest
@@ -8,7 +8,7 @@ def test_near_cone_filter_confined_to_patches_and_conservative():
 
     M = 64
     X = grid.torus_X(M); case = tc.TC2(1.5)
-    scheme = configs.FRONTIER[configs.SEPCURL_NAME][0]
+    scheme = configs.VARIANTS[configs.SEPCURL_NAME][0]
     sc = experiments.scheme_of(scheme)
     S, S0, h, cmax, dt = experiments.build(X, case, scheme)
     nu = S.nu4
@@ -28,7 +28,7 @@ def test_fp32_reference_form_with_varying_filter():
     from polarswe import fp32
     M = 64
     X = grid.torus_X(M); case = tc.TC2(0.7)
-    scheme = configs.FRONTIER[configs.SEPCURL_NAME][0]
+    scheme = configs.VARIANTS[configs.SEPCURL_NAME][0]
     S, S0, h, cmax, dt = experiments.build(X, case, scheme, fast=False)
     D0 = case.height(X) - S0.hs; v0 = case.velocity(X)
     W = fp32.Reference32(experiments.build(X, case, scheme, fast=False)[0], D0, v0)
@@ -129,7 +129,7 @@ def test_every_pipeline_scheme_builds_and_steps():
     import tc6_week2 as w2
     from polarswe import reproduce as R
     X = grid.torus_X(64)
-    schemes = [sc for name, (sc, kind) in configs.FRONTIER.items() if kind not in ("trsk", "lwt") and "lattice=square" not in sc]
+    schemes = [sc for name, (sc, kind) in configs.VARIANTS.items() if kind not in ("trsk", "lwt") and "lattice=square" not in sc]
     schemes += [configs.MAIN + ("," + ov if ov else "") for _, ov in R.CONE_STAB]
     schemes += [configs.MAIN + extra for _, extra in w2.FILTERS]
     for sc in schemes:

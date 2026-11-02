@@ -1,4 +1,4 @@
-"""Evaluate the Weierstrass map on the periodic lattice."""
+"""Evaluate periodic Weierstrass functions for the sphere map."""
 
 
 import os
@@ -10,7 +10,7 @@ if LATTICE == "hex":
 elif LATTICE == "square":
     EPS = 1j
 else:
-    raise ValueError(f"unknown lattice {LATTICE}")
+    raise ValueError(f"Unknown lattice: {LATTICE}")
 TAU = EPS
 NTERMS = 12
 

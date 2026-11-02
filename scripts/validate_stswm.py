@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Compare a modified FP64 STSWM build with the supplied FP32 TC5 diagnostics."""
 
 
 import sys, os, re, json, subprocess
@@ -23,7 +23,7 @@ def main(out):
                 a, c = float(num.findall(lo)[0]), float(num.findall(lm)[0])
                 worst[k] = max(worst[k], abs(a - c) / abs(a)); n += 1
     res = dict(compared_values=n, max_relative_difference=worst,
-               note="original: NCAR STSWM 2.0 test case 5 at T42, 32-bit Sun run shipped in stswm.tgz; this build: 64-bit gfortran")
+               note="NCAR STSWM 2.0 test case 5 at T42: supplied 32-bit diagnostics compared with the modified 64-bit gfortran build")
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     json.dump(res, open(out, "w"), indent=1)
     print(json.dumps(res))

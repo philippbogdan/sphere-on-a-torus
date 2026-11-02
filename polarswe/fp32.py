@@ -1,4 +1,4 @@
-"""Compare plain FP32 and perturbation-form FP32 with FP64."""
+"""Evaluate plain and reference-state FP32 arithmetic against FP64."""
 
 
 import numpy as np
@@ -109,7 +109,7 @@ class Reference32:
                 qD, qv = F32(Ak) * qD + dt * dD, F32(Ak) * qv + dt * dv
                 Dn, vn = Dn + F32(Bk) * qD, vn + F32(Bk) * qv
         else:
-            raise ValueError("reference form implemented for the KG and 2N-storage integrators")
+            raise ValueError("Reference-state FP32 requires a KG or 2N-storage integrator.")
         X = S.X
         vn = vn - tfd.dot(vr_full := (vn + self.v_r), X) * X
         if self.filt_D_r is not None:

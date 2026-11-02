@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Write Galewsky velocity, height, divergence and absolute vorticity for STSWM."""
 
 
 import sys, os
@@ -34,7 +34,7 @@ def main(case, nlat, out):
     with open(out, "wb") as f:
         for F in (u, zero, h, zero, zeta):
             np.ascontiguousarray(F, dtype=np.float64).tofile(f)
-    print("wrote", out, "h range", h.min(), h.max(), "max |zeta|", np.abs(zeta).max())
+    print("Saved", out, "height range (m)", h.min(), h.max(), "maximum absolute vorticity (1/s)", np.abs(zeta).max())
 
 
 if __name__ == "__main__":

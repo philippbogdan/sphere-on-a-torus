@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Compare perturbed and unperturbed NCAR height fields over time."""
 
 
 import sys, os, json

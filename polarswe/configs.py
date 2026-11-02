@@ -1,4 +1,4 @@
-"""Set the main scheme and the alternatives used in the saved runs."""
+"""Define the main numerical scheme and the comparison configurations."""
 
 from . import flopcount as fc
 
@@ -21,7 +21,7 @@ CONE = dict(R=8, p=3, rs=4, shape="lines")
 TRSK = "solver=trsk,integrator=kg10o4,courant=TRSK_COURANT"
 TRSK_COURANT = 1.7
 
-FRONTIER = {
+VARIANTS = {
 
     MAIN_NAME: (MAIN, dict(order=8, integrator="ls10o4", hv_mode="step")),
     EDGE_NAME: (MAIN + ",orient=edge", dict(order=8, integrator="ls10o4", hv_mode="step")),
@@ -53,7 +53,7 @@ STATIC = "positions"
 
 
 def cost(name, static=STATIC):
-    scheme, ck = FRONTIER[name]
+    scheme, ck = VARIANTS[name]
     if ck == "trsk":
         return trsk_cost(scheme)
     if ck == "lwt":

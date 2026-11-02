@@ -1,4 +1,4 @@
-"""Implement the published TRSK scheme on locally generated Voronoi meshes."""
+"""Apply energy-conserving TRSK on generated spherical Voronoi meshes."""
 
 
 import os, json, time, hashlib
@@ -47,7 +47,7 @@ class VoronoiMesh:
         key = lo.astype(np.int64) * N + hi
         order = np.argsort(key, kind="stable")
         key_s = key[order]
-        assert np.all(key_s[0::2] == key_s[1::2]), "every edge must be shared by two triangles"
+        assert np.all(key_s[0::2] == key_s[1::2]), "Each mesh edge must belong to two triangles."
         first, second = order[0::2], order[1::2]
         E = len(first)
         c0 = lo[first]; c1 = hi[first]
@@ -115,7 +115,7 @@ class VoronoiMesh:
             va, vb = self.verticesOnEdge[ea], self.verticesOnEdge[eb]
             common = np.where((va[:, 0] == vb[:, 0]) | (va[:, 0] == vb[:, 1]), va[:, 0], va[:, 1])
             ok = (common == vb[:, 0]) | (common == vb[:, 1])
-            assert ok.all(), "adjacent edges of a cell must share a vertex"
+            assert ok.all(), "Adjacent cell edges must share a vertex."
             voc[has, k] = common
         self.verticesOnCell = voc
 
@@ -453,7 +453,7 @@ def balanced_owner(m, cap=3):
     G = sp.csr_matrix((caps, (rows, cols)), shape=(snk + 1, snk + 1))
     r = maximum_flow(G, src, snk, method="dinic")
     if r.flow_value != E:
-        raise RuntimeError("no orientation with at most %d edges per cell" % cap)
+        raise RuntimeError("No orientation satisfies the limit of %d edges per cell." % cap)
     F = r.flow.tocsr()
     to0 = np.asarray(F[1 + eidx, 1 + E + m.cellsOnEdge[:, 0]]).ravel() > 0
     return np.where(to0, m.cellsOnEdge[:, 0], m.cellsOnEdge[:, 1])

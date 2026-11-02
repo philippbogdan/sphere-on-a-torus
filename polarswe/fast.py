@@ -1,4 +1,4 @@
-"""Compile the shallow-water kernel with Numba."""
+"""Compile the local shallow-water update and dissipation with Numba."""
 
 
 import numpy as np
@@ -132,12 +132,12 @@ def _project(v, X):
 class FastTFD:
     def __init__(self, S):
         if S.form != "flux" or S.special is not None:
-            raise ValueError("fast path supports form='flux' without special stencils")
+            raise ValueError("The compiled update requires form='flux' without special stencils.")
         self.cone = getattr(S, "cone", None)
         if S.order not in (2, 4, 6, 8):
-            raise ValueError(f"fast path supports difference orders 2, 4, 6, 8, not {S.order}")
+            raise ValueError(f"The compiled update supports difference orders 2, 4, 6, 8; received {S.order}.")
         if getattr(S, "hv_order", 4) not in (4, 6, 8, 10):
-            raise ValueError("fast path implements filters of order 4, 6, 8, 10")
+            raise ValueError("The compiled update supports filter orders 4, 6, 8, 10.")
         self.hv_order = getattr(S, "hv_order", 4)
         m = S.m
         self.S = S
@@ -170,7 +170,7 @@ class FastTFD:
         if np.ndim(coef) > 0:
 
             if n != 2:
-                raise ValueError("a filter strength varying in space is implemented for del^4")
+                raise ValueError("Spatially varying filter strength requires del^4.")
             cf = np.ascontiguousarray(coef)
             def apply_var(phi):
                 self.lap(phi, t1)

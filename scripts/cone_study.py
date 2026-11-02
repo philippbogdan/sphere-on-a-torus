@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure cone-operator consistency and steady-flow sensitivity to patch size."""
 
 
 import sys, os, json, math, time, warnings

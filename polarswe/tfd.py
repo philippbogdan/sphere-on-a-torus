@@ -1,4 +1,4 @@
-"""Solve shallow water with local differences on a periodic index grid."""
+"""Advance shallow water with local differences on a periodic index lattice."""
 
 
 import numpy as np
@@ -53,7 +53,7 @@ class Metric:
         det = g11 * g22 - g12 ** 2
         self.sqrtG = dot(np.cross(A1, A2, axis=0), n)
         if not allow_sign_change and not (np.all(self.sqrtG > 0) or np.all(self.sqrtG < 0)):
-            raise ValueError("Jacobian changes sign")
+            raise ValueError("The map Jacobian changes sign.")
 
         self.a1 = (g22 * A1 - g12 * A2) / det
         self.a2 = (-g12 * A1 + g11 * A2) / det
@@ -138,7 +138,7 @@ class TFD:
         if lap_kind == "flat":
             from . import ellip
             if ellip.LATTICE != "hex":
-                raise ValueError("the flat Laplacian is the hexagonal lattice's")
+                raise ValueError("The flat Laplacian requires the hexagonal lattice.")
         self.weight = np.abs(self.m.sqrtG)
 
         smean2 = self.weight.mean() * 2.0 / np.sqrt(3.0)
@@ -231,11 +231,11 @@ class TFD:
         if np.ndim(self.nu4) == 0:
             return self.nu4 * self.hyper(f)
         if self.hv_order != 4:
-            raise ValueError("a filter strength varying in space is implemented for del^4")
+            raise ValueError("Spatially varying filter strength requires del^4.")
         return self.lap(self.nu4 * self.lap(f))
 
     def step(self, Dp, v, dt):
-        """Advance depth in metres and tangent Cartesian velocity by dt seconds."""
+        """Advance depth (m) and tangent Cartesian velocity (m/s) by dt seconds."""
         Dn, vn = self._step(Dp, v, dt)
         if np.any(self.nu4) and self.hv_mode == "step":
             Dn = Dn - dt * self.filtered(Dn)
@@ -281,14 +281,14 @@ class TFD:
         return Dn, vn
 
     def mass(self, Dp):
-        """Integrate depth using the corrected area weights of the double cover."""
+        """Sum depth with corrected area weights over both copies of the sphere."""
         return (self.mass_weight * Dp).sum()
 
     def set_cone(self, C):
 
 
         if self.form != "flux":
-            raise ValueError("cone operators correct the flux form")
+            raise ValueError("Cone corrections require the flux formulation.")
         self.cone = C
         self.mass_weight = C.weight
         self.m.lap_w = np.sign(self.m.sqrtG) * C.weight

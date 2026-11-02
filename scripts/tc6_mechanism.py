@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Probe TC6 error growth through perturbations, phase shifts and local nudging."""
 
 
 import sys, os, json, math, warnings

@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure cell-area variation, anisotropy and spacing in the sphere maps."""
 
 
 import sys, os, json

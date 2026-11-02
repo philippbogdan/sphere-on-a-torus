@@ -1,6 +1,6 @@
-C     Added for this work (not part of NCAR STSWM 2.0): write grid-point
-C     u, v (m/s) and surface height h (m) on the Gaussian grid, plus the
-C     Gaussian latitudes, to an unformatted stream file at output times.
+C     Grid writer supplied by sphere-on-a-torus for modified NCAR STSWM.
+C     Write Gaussian latitudes, u and v (m/s), and surface height h (m)
+C     to an unformatted stream at the configured output times.
       SUBROUTINE GRDOUT(U,V,H,TAU)
       INCLUDE 'params.i'
       REAL U(NLON+2,NLAT), V(NLON+2,NLAT), H(NLON+2,NLAT), TAU

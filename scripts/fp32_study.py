@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure plain and perturbation-form FP32 height differences from FP64."""
 
 
 import sys, os, json, math, warnings

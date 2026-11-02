@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Write TC6 initial fields with a tetrahedrally symmetric height perturbation."""
 
 
 import sys, os, math
@@ -45,8 +45,7 @@ def main(nlat, amp, out):
     with open(out, "wb") as f:
         for F in (u, v, h, zero, zeta):
             np.ascontiguousarray(F, dtype=np.float64).tofile(f)
-    print("wrote", out, "perturbation RMS", amp, "m; check tetrahedral symmetry of pert:",
-          float(np.abs(np.tensordot(tetra_frame(), np.array([0, 0, 1.0]), axes=1)).round(4).tolist() is not None))
+    print("Saved", out, "perturbation RMS", amp, "m")
 
 
 if __name__ == "__main__":

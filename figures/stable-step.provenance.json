@@ -1,0 +1,219 @@
+{
+  "figure": "stable-step",
+  "labels": [
+    "Torus",
+    "Unfiltered lat-lon",
+    "Equatorial spacing of computed points (km)",
+    "Stable step / equatorial wave-crossing time",
+    "2.45",
+    "2.32",
+    "2.25",
+    "0.164",
+    "0.082",
+    "0.041"
+  ],
+  "source_data": {
+    "figure-pack/stable_step_vs_spacing.csv": {
+      "sha256": "e81dcc38f1e57a6b4f21f5d008f9d50cef95612a9a34d90e0c64cee4e1caf8f0"
+    },
+    "data/timestep.jsonl": {
+      "sha256": "19b88e4cb01ee960748c6a30d5cc3bcef8bbc77978acb732c13a64baca200ab3"
+    }
+  },
+  "plotted": [
+    {
+      "grid": "torus",
+      "width": 64,
+      "x_km": 442.29038489458344,
+      "y": 2.449489742783178
+    },
+    {
+      "grid": "torus",
+      "width": 128,
+      "x_km": 221.14519244729172,
+      "y": 2.3161058239082206
+    },
+    {
+      "grid": "torus",
+      "width": 256,
+      "x_km": 110.57259622364586,
+      "y": 2.2521628237215423
+    },
+    {
+      "grid": "lat-lon",
+      "width": 45,
+      "x_km": 314.51760703614826,
+      "y": 0.16390605756967294
+    },
+    {
+      "grid": "lat-lon",
+      "width": 90,
+      "x_km": 157.25880351807413,
+      "y": 0.08213023881496458
+    },
+    {
+      "grid": "lat-lon",
+      "width": 180,
+      "x_km": 78.62940175903707,
+      "y": 0.04107050052914293
+    }
+  ],
+  "value_labels": {
+    "torus": [
+      "2.45",
+      "2.32",
+      "2.25"
+    ],
+    "lat-lon": [
+      "0.164",
+      "0.082",
+      "0.041"
+    ]
+  },
+  "checks": {
+    "dt_max_s_matches_source": [
+      {
+        "grid": "torus",
+        "width": 64,
+        "dt_max_s": 4138.955600915821,
+        "source_dt_max_s": 4138.955600915821,
+        "days": 50.0,
+        "case": "tc5",
+        "scheme": "order=8,integrator=ls10o4,courant=1.252,hv_mode=step,kappa=0.0001,cone=8_3_4_lines_cc_dw10,cone_filter=0,tracer=skew"
+      },
+      {
+        "grid": "torus",
+        "width": 128,
+        "dt_max_s": 1956.7869572797636,
+        "source_dt_max_s": 1956.7869572797636,
+        "days": 50.0,
+        "case": "tc5",
+        "scheme": "order=8,integrator=ls10o4,courant=1.252,hv_mode=step,kappa=0.0001,cone=8_3_4_lines_cc_dw10,cone_filter=0,tracer=skew"
+      },
+      {
+        "grid": "torus",
+        "width": 256,
+        "dt_max_s": 951.3820124969579,
+        "source_dt_max_s": 951.3820124969579,
+        "days": 50.0,
+        "case": "tc5",
+        "scheme": "order=8,integrator=ls10o4,courant=1.252,hv_mode=step,kappa=0.0001,cone=8_3_4_lines_cc_dw10,cone_filter=0,tracer=skew"
+      },
+      {
+        "grid": "lat-lon",
+        "width": 45,
+        "dt_max_s": 196.9462023319841,
+        "source_dt_max_s": 196.9462023319841,
+        "days": 5.0,
+        "case": "tc5",
+        "scheme": "kappa=0,order=2,integrator=rk4"
+      },
+      {
+        "grid": "lat-lon",
+        "width": 90,
+        "dt_max_s": 49.34471803705574,
+        "source_dt_max_s": 49.34471803705574,
+        "days": 3.0,
+        "case": "tc5",
+        "scheme": "kappa=0,order=2,integrator=rk4"
+      },
+      {
+        "grid": "lat-lon",
+        "width": 180,
+        "dt_max_s": 12.33747696367547,
+        "source_dt_max_s": 12.33747696367547,
+        "days": 1.0,
+        "case": "tc5",
+        "scheme": "kappa=0,order=2,integrator=rk4"
+      }
+    ]
+  },
+  "axes": {
+    "x": {
+      "scale": "log",
+      "range": [
+        500,
+        60
+      ],
+      "ticks": [
+        400,
+        200,
+        100,
+        80
+      ]
+    },
+    "y": {
+      "scale": "log",
+      "range": [
+        0.03,
+        3.2
+      ],
+      "ticks": [
+        0.04,
+        0.1,
+        0.3,
+        1,
+        3
+      ]
+    }
+  },
+  "text_audit": {
+    "labels": [
+      "2.45",
+      "2.32",
+      "2.25",
+      "0.164",
+      "0.082",
+      "0.041",
+      "Equatorial spacing of computed points (km)",
+      "Stable step / equatorial wave-crossing time",
+      "Torus",
+      "Unfiltered lat-lon"
+    ],
+    "numeric": [
+      "400",
+      "200",
+      "100",
+      "80",
+      "0.04",
+      "0.1",
+      "0.3",
+      "1",
+      "3"
+    ],
+    "min_text_px": 16.0
+  },
+  "render": {
+    "canvas_px": [
+      1000,
+      590
+    ],
+    "png_px": [
+      2000,
+      1180
+    ],
+    "svg_text": "outlined paths",
+    "font": "Arial.ttf",
+    "colours": {
+      "torus": "#0072B2",
+      "lat_lon": "#D55E00",
+      "baseline": "#333333"
+    },
+    "versions": {
+      "python": "3.14.7",
+      "matplotlib": "3.11.1",
+      "numpy": "2.4.6",
+      "pillow": "12.2.0"
+    }
+  },
+  "outputs": {
+    "figures/stable-step.svg": {
+      "sha256": "bccd2a4d074063382a0e00209e902658a3d84c57302ff5f4d924d9cbdae57f57",
+      "bytes": 38504
+    },
+    "figures/stable-step.png": {
+      "sha256": "f74721f077df4dd1b214b549711d74b2f78420b645e6109d5be082d3de0d7058",
+      "bytes": 84250
+    }
+  }
+}

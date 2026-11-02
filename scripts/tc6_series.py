@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure TC6 height error and zonal momentum change at successive times."""
 
 
 import sys, os, json, warnings

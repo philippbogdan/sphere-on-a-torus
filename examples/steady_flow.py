@@ -1,4 +1,4 @@
-"""Run a short whole-sphere steady-flow case with the main scheme."""
+"""Advance a short analytic steady flow and print its error and mass drift."""
 from pathlib import Path
 import json
 import sys

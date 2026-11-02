@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Define analytic shallow-water fields and the Williamson and Galewsky cases."""
 
 
 import numpy as np

@@ -1,4 +1,4 @@
-"""Run shallow-water cases with one shared solver constructor."""
+"""Construct solvers, advance standard cases and measure their errors."""
 
 
 import os, json, time
@@ -69,17 +69,19 @@ def filter_nu(sc, h, c, X=None):
 
 
 def build(X, case, scheme, allow_sign_change=False, fast=True, device="cpu"):
-    """Return (solver, metric_solver, spacing_m, wave_speed_m_per_s, step_s).
+    """Build the solver and return its metric, spacing, initial wave speed and step.
 
-    X is a unit-sphere position array of shape (3, M, M).
-    The step is the configured Courant number times mean spacing over initial wave speed.
+    X contains Cartesian unit-sphere positions, with shape (3, M, M).
+    The returned tuple is (solver, metric_solver, spacing_m, wave_speed_m_per_s,
+    step_s). The proposed step uses the configured Courant number, mean spacing
+    and initial maximum wave speed.
     """
 
 
     sc = scheme_of(scheme)
     from . import ellip
     if not allow_sign_change and sc.get("lattice", "hex") != ellip.LATTICE:
-        raise RuntimeError(f"scheme asks for lattice {sc.get('lattice', 'hex')} but POLARSWE_LATTICE is {ellip.LATTICE}")
+        raise RuntimeError(f"The scheme requires lattice {sc.get('lattice', 'hex')}; POLARSWE_LATTICE is {ellip.LATTICE}.")
     S0 = tfd.TFD(X, case, order=sc["order"], allow_sign_change=allow_sign_change)
     h = float(np.sqrt(S0.weight.mean()))
     D0 = case.height(X) - S0.hs
@@ -155,7 +157,7 @@ def run(spec, name, days=None, scheme=None, dt=None, verbose=False, max_steps=No
     T = days * tc.DAY
     if name.startswith("tc1"):
         if sc.get("solver") == "lwt":
-            raise NotImplementedError("advection-only case for the Lax-Wendroff torus")
+            raise NotImplementedError("The Lax-Wendroff torus does not support advection-only cases.")
         hmean = float(np.sqrt(tfd.TFD(X, case, order=sc["order"], allow_sign_change=info["allow_sign_change"]).weight.mean()))
         return run_tc1(X, info, case, sc, days, dt, hmean, verbose, spec, name)
     if sc.get("solver") == "lwt":

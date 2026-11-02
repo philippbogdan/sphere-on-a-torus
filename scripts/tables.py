@@ -1,4 +1,4 @@
-"""Write the claim tables after a fresh numerical run."""
+"""Calculate comparison values from newly computed data and write JSON."""
 import sys
 from check_claims import main
 if __name__ == '__main__':

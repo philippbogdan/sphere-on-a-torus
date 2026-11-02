@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Separate initial steady-flow tendencies and dissipation by distance from a cone."""
 
 
 import sys, os, json, math, warnings

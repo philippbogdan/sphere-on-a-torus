@@ -1,4 +1,4 @@
-"""Count arithmetic and dependency reach for the solver kernels."""
+"""Count kernel operations, stored words and full-step dependency reach."""
 
 
 import re

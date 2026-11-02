@@ -1,4 +1,4 @@
-"""Read locally generated NCAR reference fields."""
+"""Read and interpolate separately generated NCAR STSWM grid fields."""
 
 
 import numpy as np
@@ -54,4 +54,4 @@ def height_at(fn, X, tau_hours):
     for t, u, v, h in recs:
         if abs(t - tau_hours) < 1e-6:
             return SphereInterp(glat, h)(X)
-    raise KeyError(f"no output at tau={tau_hours} h in {fn}: {[r[0] for r in recs]}")
+    raise KeyError(f"No field at tau={tau_hours} h in {fn}; available times: {[r[0] for r in recs]}")

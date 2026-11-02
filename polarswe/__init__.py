@@ -1,1 +1,1 @@
-"""Numerical routines for the shallow-water studies."""
+"""Shallow-water equations on a periodic double cover of the sphere."""

@@ -1,4 +1,4 @@
-"""Numerical routines for the shallow-water studies."""
+"""Apply a Lax-Wendroff update with local predictors at the torus cones."""
 
 
 import numpy as np
@@ -46,7 +46,7 @@ class LWTorus:
         self.bmask = np.zeros((M0, M1), bool); self.bmask[bi[:, 0], bi[:, 1]] = True
         pa = self.prim.area.copy()
         if (pa[~self.bmask] <= 0).any() or (self.dual.area <= 0).any():
-            raise ValueError("non-positive cell area outside branch cells")
+            raise ValueError("Cell areas outside the branch cells must be positive.")
         pa[self.bmask] = 1.0
         self.prim_area = pa
         self.f, self.fc = case.coriolis(X), case.coriolis(Xc)

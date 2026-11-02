@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure relative changes in the zonal momentum integral of NCAR fields."""
 
 
 import sys, os, json

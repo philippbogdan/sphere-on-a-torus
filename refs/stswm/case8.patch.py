@@ -1,5 +1,8 @@
-"""Add test case 8 to STSWM (this work, not NCAR): initial u, v, h, divergence and
-vorticity read from 'init_grid.bin' (stream file, float64, longitude fastest) at TIME=0."""
+"""Add file-based initial conditions to a modified derivative of NCAR STSWM.
+
+This patch is supplied by sphere-on-a-torus. At TIME=0, test case 8 reads
+u, v, h, divergence and vorticity from init_grid.bin as float64 values,
+with longitude varying fastest. UCAR's terms still apply to the NCAR code."""
 import sys
 d = sys.argv[1]
 s = open(f"{d}/init.f").read()
@@ -20,4 +23,4 @@ a = a.replace("""      ELSEIF ((CASE .EQ. 7) .OR. (TIME .GT. 0.0)) THEN""", """ 
       CLOSE(78)
       ELSEIF ((CASE .EQ. 7) .OR. (TIME .GT. 0.0)) THEN""", 1)
 open(f"{d}/anlytc.f", "w").write(a)
-print("patched", d)
+print("Applied the initial-field patch to", d)

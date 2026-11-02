@@ -1,4 +1,4 @@
-"""Check the cone algebra on a small patch before a long run."""
+"""Verify cone adjointness, compatible curl and conservative short-time stepping."""
 import numpy as np
 from polarswe import grid, tfd, testcases as tc, experiments, configs
 

@@ -1,4 +1,4 @@
-"""Move the conformal grid towards equal area."""
+"""Redistribute the conformal map's area using a periodic Moser flow."""
 
 
 import numpy as np

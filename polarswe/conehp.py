@@ -1,4 +1,4 @@
-"""Fit local cone corrections to an adjoint gradient and divergence pair."""
+"""Fit local cone operators with an adjoint gradient/divergence pair."""
 
 
 import numpy as np
@@ -51,7 +51,7 @@ class ConeHP:
     def __init__(self, S, R=8.0, p=4, rs=4, a=tc.A, curl=True, verbose=False, rcond=1e-10, Rc=None, shape="disc", pD=None, orth=False, degw=1.0,
                  solver="svd"):
         if ellip.LATTICE != "hex":
-            raise ValueError("hexagonal lattice only")
+            raise ValueError("Cone fitting requires the hexagonal lattice.")
         m = S.m
         X = np.asarray(S.X)
         M0, M1 = X.shape[1:]
@@ -110,7 +110,7 @@ class ConeHP:
                     if ui * ui + uj * uj + ui * uj <= (R + rs) ** 2:
                         q = flat(i, j)
                         if q in seen:
-                            raise ValueError(f"cone patches of R = {R} cells (stencil reach {rs}) overlap on the M = {M} torus")
+                            raise ValueError(f"Cone patches with R = {R} cells and stencil reach {rs} overlap at M = {M}.")
                         seen.add(q)
         E_corr = {}
         K_corr = {}
@@ -316,7 +316,7 @@ class ConeHP:
             if verbose:
                 print(self.info[-1], self.svd, flush=True)
             if np.any(wP <= 0):
-                raise ValueError("cone weights not positive")
+                raise ValueError("The fitted cone weights must be positive.")
 
             for P in phys:
                 for Pc in (P, mirror(P)):

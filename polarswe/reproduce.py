@@ -1,4 +1,8 @@
-"""Run the numerical studies. The full study needs cluster time."""
+"""Recompute reference fields, solver comparisons and numerical diagnostics.
+
+Select stages explicitly to limit the work. The default executes the CPU
+calculations in dependency order; high-resolution cases can be expensive.
+Results are written into data/. See REPRODUCE.md before replacing saved data."""
 
 
 import os, sys, json, subprocess, argparse, glob, shutil, time, math
@@ -21,8 +25,8 @@ COMMIT = current_commit()
 
 MAIN = configs.MAIN
 PREV = configs.PREV_MAIN
-FD4 = configs.FRONTIER[configs.FD4_NAME][0]
-TRSK = configs.FRONTIER[configs.TRSK_NAME][0]
+FD4 = configs.VARIANTS[configs.FD4_NAME][0]
+TRSK = configs.VARIANTS[configs.TRSK_NAME][0]
 
 MPAS = "solver=trsk,integrator=rk4,courant=0.5"
 HALF_PI = "1.5707963267948966"
@@ -52,7 +56,7 @@ def needs_refs(spec):
     return case in ("tc5", "tc6", "galewsky")
 
 
-FRONTIER_CASES = ("tc1_a" + HALF_PI, "tc2_a0.7", "tc5", "tc6", "galewsky_nopert", "galewsky")
+CASES = ("tc1_a" + HALF_PI, "tc2_a0.7", "tc5", "tc6", "galewsky_nopert", "galewsky")
 MPAS_CASES = ("tc2_a0.7", "tc5", "tc6", "galewsky", "galewsky_nopert")
 ORIENTATIONS = ("vertex", "edge", "generic", "generic2")
 
@@ -73,7 +77,7 @@ TRACER_SPECS = ([f"torus:{M}:tc1_a{HALF_PI}:{MAIN},tracer=flux" for M in (128, 2
 TIMESTEP = (
     [("torus", M, "tc5", 50, 1.0, 6.0, MAIN) for M in (64, 128, 256)]
     + [("torus", M, "tc5", 50, 1.0, 6.0, FD4) for M in (64, 128)]
-    + [("torus", 64, "tc5", 50, 0.2, 6.0, configs.FRONTIER[k][0]) for k in configs.FRONTIER
+    + [("torus", 64, "tc5", 50, 0.2, 6.0, configs.VARIANTS[k][0]) for k in configs.VARIANTS
        if k not in (configs.MAIN_NAME, configs.FD4_NAME, "square cover")]
     + [("torus", 128, "tc5", 50, 1.0, 8.0, TRSK)]
     + [("dfs", 45, "tc5", 5, 0.005, 0.5, "kappa=0,order=2,integrator=rk4"),
@@ -117,7 +121,7 @@ def done_specs(fn):
 def run_suite(fn, specs, workers, force, env=None):
     todo = specs if force else [s for s in specs if s not in done_specs(fn)]
     if not todo:
-        print(f"[{os.path.basename(fn)}] nothing to do", flush=True); return
+        print(f"[{os.path.basename(fn)}] matching records already exist", flush=True); return
     subprocess.run([PY, os.path.join(ROOT, "scripts/suite.py"), fn, str(workers)] + todo, check=True,
                    env=dict(os.environ, **(env or {})))
 
@@ -127,11 +131,11 @@ def run_parallel(cmds, workers, env=None):
     for cmd in cmds:
         while sum(p.poll() is None for p in procs) >= workers:
             time.sleep(2)
-        print("running:", " ".join(os.path.relpath(c, ROOT) if c.startswith(ROOT) else c for c in cmd[1:]), flush=True)
+        print("Executing:", " ".join(os.path.relpath(c, ROOT) if c.startswith(ROOT) else c for c in cmd[1:]), flush=True)
         procs.append(subprocess.Popen(cmd, env=dict(os.environ, NUMBA_NUM_THREADS="1", **(env or {}))))
     rc = [p.wait() for p in procs]
     if any(rc):
-        raise SystemExit(f"{sum(1 for r in rc if r)} commands failed")
+        raise SystemExit(f"Failed commands: {sum(1 for r in rc if r)}")
 
 
 STAMPS = os.path.join(RES, ".stamps")
@@ -142,14 +146,14 @@ def done(name):
     return os.path.exists(p) and open(p).read().strip() == COMMIT
 
 
-def run_outputs(jobs, workers, force, env=None):
+def run_outputs(tasks, workers, force, env=None):
 
-    names = sorted({n for n, _ in jobs if force or not done(n)})
+    names = sorted({n for n, _ in tasks if force or not done(n)})
     for n in names:
         for p in (os.path.join(RES, n), os.path.join(STAMPS, n)):
             if os.path.exists(p):
                 os.remove(p)
-    run_parallel([c for n, c in jobs if n in names], workers, env)
+    run_parallel([c for n, c in tasks if n in names], workers, env)
     os.makedirs(STAMPS, exist_ok=True)
     for n in names:
         open(os.path.join(STAMPS, n), "w").write(COMMIT + "\n")
@@ -194,7 +198,7 @@ def _records(fn):
         return 0
 
 
-def _stswm_job(spec):
+def _stswm_run(spec):
     T, name, dt, hdc, taue, icond, alpha, sits, tauo, init, force = spec
     run = os.path.join(REFD, "runs", name)
     out = os.path.join(run, "grid_out.bin")
@@ -213,7 +217,7 @@ def _stswm_job(spec):
     exe = os.path.join(REFD, f"build_T{T}_ref", "stswm")
     subprocess.run(f"{exe} < exp > stdout 2> stderr", shell=True, cwd=run, check=True)
     if _records(out) < need:
-        raise RuntimeError(f"{name}: incomplete output")
+        raise RuntimeError(f"{name}: the reference output is incomplete.")
     open(stamp, "w").write(COMMIT + "\n")
     return run
 
@@ -272,12 +276,12 @@ def stage_refs(args):
                (T, f"T{T}_tc1", TC1_DT[T], 0.0, 288.0, 1, float(HALF_PI), False, 24.0, None, f)]
     w1.sort(key=lambda j: -(j[0] / 213.0) ** 3 * j[4] / j[2])
     with mp.Pool(max(1, args.ref_workers)) as pool:
-        for run in pool.imap_unordered(_stswm_job, w1):
-            print("STSWM:", os.path.relpath(run.split(" (")[0], ROOT), run.split(" ")[-1] if "(kept)" in run else "done", flush=True)
+        for run in pool.imap_unordered(_stswm_run, w1):
+            print("NCAR reference:", os.path.relpath(run.split(" (")[0], ROOT), run.split(" ")[-1] if "(kept)" in run else "done", flush=True)
 
     seed = (213, "T213_tc6_seed", 180.0, 8.0e12, 336.0, 8, 0.0, True, 24.0,
             ("scripts/tc6_seed.py", 128, 320, os.path.join(REFD, "runs/T213dt22_tc6/grid_out.bin")), f)
-    print("STSWM:", _stswm_job(seed), flush=True)
+    print("NCAR reference:", _stswm_run(seed), flush=True)
     fn = os.path.join(RES, "stswm_errors.jsonl")
     if os.path.exists(fn):
         os.remove(fn)
@@ -338,14 +342,14 @@ def stage_diagnostics(args, after_refs=False, grow=True):
         sys.path.insert(0, os.path.join(ROOT, "scripts"))
         import tc6_week2 as w2
         per_config = {"relax": len(w2.RELAX), "latlon": len(w2.LATLON), "filters": len(w2.FILTERS)}
-        jobs = [("tc6_tilt.jsonl", script("tc6_mechanism.py", "tilt", os.path.join(RES, "tc6_tilt.jsonl")))]
-        jobs += [(f"tc6_week2_{m}.jsonl", script("tc6_week2.py", m, os.path.join(RES, f"tc6_week2_{m}.jsonl")))
+        tasks = [("tc6_tilt.jsonl", script("tc6_mechanism.py", "tilt", os.path.join(RES, "tc6_tilt.jsonl")))]
+        tasks += [(f"tc6_week2_{m}.jsonl", script("tc6_week2.py", m, os.path.join(RES, f"tc6_week2_{m}.jsonl")))
                  for m in ("restart", "sharpness", "twins7")]
-        jobs += [(f"tc6_week2_{m}.jsonl", script("tc6_week2.py", m, os.path.join(RES, f"tc6_week2_{m}.jsonl"), k))
+        tasks += [(f"tc6_week2_{m}.jsonl", script("tc6_week2.py", m, os.path.join(RES, f"tc6_week2_{m}.jsonl"), k))
                  for m, n in per_config.items() for k in range(n)]
 
-        jobs += [("trsk_beta.jsonl", script("trsk_beta.py", os.path.join(RES, "trsk_beta.jsonl"), M, b, it)) for M, b, it in TRSK_BETA]
-        run_outputs(jobs, args.workers, args.force)
+        tasks += [("trsk_beta.jsonl", script("trsk_beta.py", os.path.join(RES, "trsk_beta.jsonl"), M, b, it)) for M, b, it in TRSK_BETA]
+        run_outputs(tasks, args.workers, args.force)
         run_outputs([("tc6_week2_restart_square.jsonl", script("tc6_week2.py", "restart_square", os.path.join(RES, "tc6_week2_restart_square.jsonl")))],
                     1, args.force, env={"POLARSWE_LATTICE": "square"})
 
@@ -363,7 +367,7 @@ def stage_timestep(args):
         if (g, n, case, sc) in have:
             continue
         cmds.append(script("maxdt.py", fn, g, n, case, days, lo, hi, sc))
-    sq = configs.FRONTIER["square cover"][0]
+    sq = configs.VARIANTS["square cover"][0]
     if ("torus", 64, "tc5", sq) not in have:
         cmds.append(script("maxdt.py", fn, "torus", 64, "tc5", 50, 1.0, 6.0, sq))
     sq_env = {"POLARSWE_LATTICE": "square"}
@@ -389,19 +393,19 @@ def stage_accuracy(args, refs_ready):
 
 def stage_variants(args, refs_ready):
     specs = []
-    for name, (sc, _) in configs.FRONTIER.items():
+    for name, (sc, _) in configs.VARIANTS.items():
         if name in (configs.MAIN_NAME, "square cover"):
             continue
         for M in (64, 128):
-            for c in FRONTIER_CASES:
+            for c in CASES:
                 if c.startswith("tc1") and "solver=lwt" in sc:
                     continue
                 s = f"torus:{M}:{c}:{sc}"
                 if needs_refs(s) == refs_ready:
                     specs.append(s)
     run_suite(os.path.join(RES, f"variants{sfx(refs_ready)}.jsonl"), specs, args.workers, args.force)
-    sq = configs.FRONTIER["square cover"][0]
-    specs = [f"torus:{M}:{c}:{sq}" for M in (64, 128) for c in FRONTIER_CASES]
+    sq = configs.VARIANTS["square cover"][0]
+    specs = [f"torus:{M}:{c}:{sq}" for M in (64, 128) for c in CASES]
     specs = [s for s in specs if needs_refs(s) == refs_ready]
     run_suite(os.path.join(RES, f"variants_square{sfx(refs_ready)}.jsonl"), specs, args.workers, args.force, env={"POLARSWE_LATTICE": "square"})
 
@@ -419,11 +423,11 @@ def stage_mpas(args, refs_ready):
 
 def stage_orientation(args, refs_ready):
 
-    specs = [f"torus:128:{c}:{MAIN},orient={o}" for o in ORIENTATIONS for c in FRONTIER_CASES]
+    specs = [f"torus:128:{c}:{MAIN},orient={o}" for o in ORIENTATIONS for c in CASES]
     specs = [x for x in specs if needs_refs(x) == refs_ready]
     run_suite(os.path.join(RES, f"orientation{sfx(refs_ready)}.jsonl"), specs, args.workers, args.force)
-    sq = configs.FRONTIER["square cover"][0]
-    specs = [f"torus:128:{c}:{sq},orient=generic" for c in FRONTIER_CASES]
+    sq = configs.VARIANTS["square cover"][0]
+    specs = [f"torus:128:{c}:{sq},orient=generic" for c in CASES]
     specs = [x for x in specs if needs_refs(x) == refs_ready]
     run_suite(os.path.join(RES, f"orientation_square{sfx(refs_ready)}.jsonl"), specs, args.workers, args.force, env={"POLARSWE_LATTICE": "square"})
 
@@ -436,10 +440,10 @@ def stage_floor(args, refs_ready):
 def stage_series(args):
     fn = os.path.join(RES, "tc6_series.jsonl")
     Ms = (64, 128, 144, 160, 180, 256, 288) + ((512, 576) if args.highres else ())
-    jobs = [("tc6_series.jsonl", script("tc6_series.py", fn, M)) for M in Ms]
-    jobs += [("tc6_series.jsonl", script("tc6_series.py", fn, M, f"scheme={sc}")) for M in (128, 256)
-             for sc in (configs.FRONTIER[configs.EDGE_NAME][0], PREV, configs.FRONTIER[configs.FD8F_NAME][0])]
-    run_outputs(jobs, args.workers, args.force)
+    tasks = [("tc6_series.jsonl", script("tc6_series.py", fn, M)) for M in Ms]
+    tasks += [("tc6_series.jsonl", script("tc6_series.py", fn, M, f"scheme={sc}")) for M in (128, 256)
+             for sc in (configs.VARIANTS[configs.EDGE_NAME][0], PREV, configs.VARIANTS[configs.FD8F_NAME][0])]
+    run_outputs(tasks, args.workers, args.force)
     runs = ["T213dt22_tc6", "T341dt90_tc6", "T170_tc6", "T85_tc6", "T85dt90_tc6", "T42_tc6", "T42dt90_tc6", "T21_tc6"]
     run_outputs([("aam_spectral.json", script("aam_spectral.py", os.path.join(RES, "aam_spectral.json"), *runs))], 1, args.force)
 
@@ -464,14 +468,14 @@ def stage_tables(args):
 
 
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("stages", nargs="*")
-    ap.add_argument("--workers", type=int, default=4)
-    ap.add_argument("--ref-workers", type=int, default=4)
-    ap.add_argument("--force", action="store_true")
-    ap.add_argument("--fresh", action="store_true", help="archive existing result files first (data/previous/)")
-    ap.add_argument("--highres", action="store_true", help="also run M = 512")
-    ap.add_argument("--gpu", action="store_true")
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("stages", nargs="*", help="Stages to compute; omit for all CPU stages in dependency order. See REPRODUCE.md for stage names.")
+    ap.add_argument("--workers", type=int, default=4, help="Maximum concurrent local solver calculations.")
+    ap.add_argument("--ref-workers", type=int, default=4, help="Maximum concurrent local NCAR reference calculations.")
+    ap.add_argument("--force", action="store_true", help="Recompute eligible outputs even when matching records exist.")
+    ap.add_argument("--fresh", action="store_true", help="Move existing JSON results to data/previous/ before computing.")
+    ap.add_argument("--highres", action="store_true", help="Include the finest accuracy, mesh and precision cases.")
+    ap.add_argument("--gpu", action="store_true", help="Request GPU arithmetic in solver paths that support POLARSWE_DEVICE.")
     args = ap.parse_args()
     if args.gpu:
         os.environ["POLARSWE_DEVICE"] = "gpu"
@@ -494,33 +498,33 @@ def main():
              ("accuracy (analytic references)", lambda a: stage_accuracy(a, False)),
              ("variants (analytic references)", lambda a: stage_variants(a, False)),
              ("floor (analytic references)", lambda a: stage_floor(a, False)),
-             ("MPAS's scheme (analytic references)", lambda a: stage_mpas(a, False)),
+             ("TRSK (analytic references)", lambda a: stage_mpas(a, False)),
              ("orientation (analytic references)", lambda a: stage_orientation(a, False)),
              ("fp32", stage_fp32), ("timestep", stage_timestep))
     WITHREF = (("accuracy (STSWM references)", lambda a: stage_accuracy(a, True)),
                ("variants (STSWM references)", lambda a: stage_variants(a, True)),
                ("floor (STSWM references)", lambda a: stage_floor(a, True)),
-               ("MPAS's scheme (STSWM references)", lambda a: stage_mpas(a, True)),
+               ("TRSK (NCAR references)", lambda a: stage_mpas(a, True)),
                ("orientation (STSWM references)", lambda a: stage_orientation(a, True)),
                ("series", stage_series), ("diagnostics (part 2)", lambda a: stage_diagnostics(a, True)))
     def run_list(lst):
         for name, fn in lst:
-            print(f"=== stage {name}", flush=True)
+            print(f"Stage: {name}", flush=True)
             fn(args)
     single.update(noref=lambda a: run_list(NOREF), withref=lambda a: run_list(WITHREF))
     if args.stages:
         for s in args.stages:
-            print(f"=== stage {s}", flush=True)
+            print(f"Stage: {s}", flush=True)
             single[s](args)
         return
 
-    print("=== stage refs (in parallel)", flush=True)
+    print("Stage: refs (concurrent reference calculations)", flush=True)
     ref_proc = mp.Process(target=stage_refs, args=(args,))
     ref_proc.start()
     run_list(NOREF)
     ref_proc.join()
     if ref_proc.exitcode != 0:
-        raise SystemExit("reference stage failed")
+        raise SystemExit("The reference stage failed.")
     run_list(WITHREF + (("tables", stage_tables),))
 
 

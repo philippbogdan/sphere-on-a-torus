@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure TRSK error and neighbour reach as the point distribution changes."""
 
 
 import sys, os, json, warnings

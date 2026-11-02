@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Transfer torus day-1 height error into TC6 initial fields on a Gaussian grid."""
 
 
 import sys, os, math, warnings
@@ -39,7 +39,7 @@ def main(M, nlat, reffn, out):
         for Fld in ((v3 * e).sum(0), (v3 * nn).sum(0), C.height(Xg) + dh, zero, zeta):
             np.ascontiguousarray(Fld, dtype=np.float64).tofile(f)
     W = np.broadcast_to(wq[::-1][:, None], P.shape)
-    print(f"seed: torus M={M} day-1 height error, RMS {math.sqrt((W * dh**2).sum() / W.sum()):.3f} m on the Gaussian grid "
+    print(f"Initial perturbation from torus M={M} day-1 height error: RMS {math.sqrt((W * dh**2).sum() / W.sum()):.3f} m on the Gaussian grid "
           f"(on the torus {math.sqrt((S0.weight * err.reshape(M, M)**2).sum() / S0.weight.sum()):.3f} m)")
 
 

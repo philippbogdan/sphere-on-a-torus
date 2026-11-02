@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Test late-time TC6 sensitivity to restarts, perturbations and dissipation."""
 
 
 import sys, os, json, math, warnings
@@ -54,21 +54,21 @@ def restart(out, square=False):
     main = configs.MAIN
     q = f"{main},courant={configs.parse(main)['courant'] / 4:g}"
     if square:
-        runs = [(128, 7, "square cover", configs.FRONTIER["square cover"][0], False)]
+        runs = [(128, 7, "square cover", configs.VARIANTS["square cover"][0], False)]
     else:
         runs = [(M, 7, "main", main, False) for M in (64, 128, 256, 512)] + [
         (128, 0, "main", main, False),
         (128, 7, configs.PREV_NAME, configs.PREV_MAIN, False),
-        (128, 7, configs.FD4_NAME, configs.FRONTIER[configs.FD4_NAME][0], False),
-        (128, 7, configs.FD8F_NAME, configs.FRONTIER[configs.FD8F_NAME][0], False),
+        (128, 7, configs.FD4_NAME, configs.VARIANTS[configs.FD4_NAME][0], False),
+        (128, 7, configs.FD8F_NAME, configs.VARIANTS[configs.FD8F_NAME][0], False),
         (128, 7, "main, kappa x 5", main + f",kappa={5 * configs.parse(main)['kappa']:g}", False),
         (128, 7, "main, kappa / 5", main + f",kappa={configs.parse(main)['kappa'] / 5:g}", False),
         (128, 7, "main, quarter step", q, False),
         (128, 7, "main, filter only near the branch points", main, True),
-        (128, 7, configs.EDGE_NAME, configs.FRONTIER[configs.EDGE_NAME][0], False)]
+        (128, 7, configs.EDGE_NAME, configs.VARIANTS[configs.EDGE_NAME][0], False)]
     for M, d0, label, scheme, nb in runs:
         if square and ellip.LATTICE != "square":
-            raise RuntimeError("restart_square needs POLARSWE_LATTICE=square")
+            raise RuntimeError("The square-map restart requires POLARSWE_LATTICE=square.")
         F, S0, X, dt = setup(M, scheme, nb); w = S0.weight
         lat, _ = tc.latlon(X); latd = np.degrees(lat)
         if d0 == 0:

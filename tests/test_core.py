@@ -1,4 +1,4 @@
-"""Check geometry, conservation, time integration and the compiled solver."""
+"""Verify the map, conservation identities, integrators and compiled updates."""
 import json, os, math
 import numpy as np
 import pytest

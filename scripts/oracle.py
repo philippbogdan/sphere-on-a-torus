@@ -1,4 +1,4 @@
-"""Run a numerical check and save its measurements."""
+"""Measure steady-flow error after cancelling the initial tendency near cones."""
 
 
 import sys, os, json, math, warnings
