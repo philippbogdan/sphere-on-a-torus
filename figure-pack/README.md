@@ -13,7 +13,7 @@ The tables separate measured accuracy and stability from modelled throughput. [`
 | `hero-input.json` | Archive digest, dimensions, physical times and metadata for the supplied Galewsky field archive |
 | `model.json` | Extrapolated step ratio, kernel operations and reach, patch cost and model calibration |
 
-`relative` is simulated time per wall time, not just steps per second. `ratio` in the TRSK table is TRSK error divided by torus error; `torus_over_spectral` uses the opposite numerator. The filtered comparison has its own denominator and must not be combined with the polar-limited headline.
+`relative` is simulated time per wall time, not just steps per second. `ratio` in the TRSK table is TRSK error divided by torus error; `torus_over_spectral` uses the opposite numerator. The filtered comparison has its own denominator and must not be combined with the cost-model comparison against latitude-longitude with no polar filter.
 
 [`scripts/make_figures.py`](../scripts/make_figures.py) renders four SVG/PNG pairs from these tables; [`scripts/make_hero.py`](../scripts/make_hero.py) renders the movie from `build/hero.npz`. Each figure occupies a full README row. [REPRODUCE.md](../REPRODUCE.md#movie-data-and-figure-inputs) gives the dependencies and commands.
 

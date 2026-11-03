@@ -16,13 +16,13 @@ Each point is TRSK error divided by torus error for the same test and reference;
 
 TRSK has lower maximum error in two comparisons. NCAR's spectral model has about **1.9x lower TC6 day-14 $`l_2`$ error** at matched point counts. These are shallow-water tests, not full atmosphere models. [Norms, reference uncertainty and comparison limits](docs/METHOD.md#accuracy-comparisons).
 
-## What avoiding the poles buys
+## Throughput depends on the polar treatment
 
-The torus keeps a fixed 42-point reach everywhere. It takes fewer steps per second, but each step advances much more simulated time. At 15 arcseconds (463 m) on 64 Cerebras CS-3 systems, the Domain Translation cost model estimates **856x more simulated time per wall time** than an unfiltered, polar-limited grid, with no Cerebras hardware measurements. This estimate counts cone-patch work on the busiest core; sharing it gives a **1,263x estimate with an unimplemented schedule**.
+The torus keeps a fixed 42-point reach everywhere. It takes fewer steps per second than unfiltered latitude-longitude, but its extrapolated step is longer. At 15 arcseconds (463 m) on 64 Cerebras CS-3 systems, the Domain Translation cost model estimates 856x the simulated time per wall time of latitude-longitude with no polar filter when cone-patch work is counted on the busiest core, or 1,263x with an unimplemented sharing schedule; neither estimate has been run on hardware. In a separate model at the same spacing, latitude-longitude with a polar filter is 1.41x as fast as the torus.
 
-<a href="figures/throughput.svg"><img src="figures/throughput.png" width="100%" alt="Modelled simulated time per wall time, relative to polar-limited latitude-longitude: 1 for the baseline, 856 for the torus with patch work counted, and 1,263 with estimated sharing."></a>
+<a href="figures/throughput.svg"><img src="figures/throughput.png" width="100%" alt="Cost-model throughput at 15 arcseconds relative to latitude-longitude with no polar filter: baseline 1, torus 856x with patch work on the busiest core or 1,263x with an unimplemented sharing schedule; no hardware run. In a separate model at the same spacing, latitude-longitude with a polar filter is 1.41x as fast as the torus."></a>
 
-Modelled throughput at 15 arcseconds on 64 CS-3 systems, using extrapolated time steps. Both torus estimates need a new coefficient layout: the busiest core needs about 70.5 kB against an assumed 48 kB.
+Cost-model throughput at 15 arcseconds on 64 CS-3 systems uses extrapolated time steps with no hardware run and compares against latitude-longitude with no polar filter; in a separate model at the same spacing, latitude-longitude with a polar filter is 1.41x as fast as the torus. Both torus estimates need a new coefficient layout: the busiest core needs about 70.5 kB against an assumed 48 kB.
 
 <a href="figures/stable-step.svg"><img src="figures/stable-step.png" width="100%" alt="As equatorial spacing decreases, the torus stable step in wave-crossing units stays near 2.3 while the unfiltered latitude-longitude value falls from 0.164 to 0.041."></a>
 
@@ -43,7 +43,7 @@ The model favours one copy at fine spacing and local communication at coarse spa
 - The throughput model extends Domain Translation from [Oppelstrup et al., arXiv:2511.11542](https://arxiv.org/abs/2511.11542), whose pole treatment is undisclosed. The 15-arcsecond case was not simulated: the torus step is extrapolated from M = 256, and the polar limit from a second-order centred/RK4 solver, not the paper's Lax-Wendroff solver.
 - Both throughput estimates require coefficient distribution or streaming. Neither a Cerebras kernel nor the proposed sharing schedule has been implemented or timed.
 - Equal unique-cell counts do not mean equal work, storage or degrees of freedom. The accuracy comparisons establish neither forecast quality nor speed at equal accuracy.
-- The filtered comparison has a different baseline and cannot be combined with the 856x estimate.
+- The filtered and unfiltered comparisons have different denominators, so their throughput ratios cannot be combined.
 - Fine grid-scale stripes in the movie's late vorticity bands are in the saved field. The movie shows the computed flow, not convergence of its smallest structures. [Reading the movie](docs/METHOD.md#reading-the-movie).
 
 ## How to use it

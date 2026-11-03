@@ -1,6 +1,6 @@
 # What the throughput model predicts
 
-At 15 arcseconds (463.3 m nominal equatorial spacing), the model predicts 856x more simulated time per wall time than an unfiltered, polar-limited latitude-longitude grid on 64 CS-3 systems. It combines modelled step rates with extrapolated time steps; there are no Cerebras hardware measurements.
+At 15 arcseconds (463.3 m nominal equatorial spacing) on 64 CS-3 systems, the cost model gives the torus 856x the simulated time per wall time of latitude-longitude with no polar filter, with no hardware run. In a separate model at the same spacing, latitude-longitude with a polar filter is 1.41x as fast as the torus. The unfiltered comparison combines modelled step rates with extrapolated time steps.
 
 | Layout | Modelled steps/s | Modelled simulated time per wall time, relative to baseline |
 |---|---:|---:|
@@ -14,7 +14,7 @@ Both torus estimates require coefficient distribution or streaming to fit core m
 
 The baseline extends the Domain Translation cost model of [Oppelstrup et al., arXiv:2511.11542](https://arxiv.org/abs/2511.11542) with a polar time-step limit. The paper does not disclose its pole treatment. The limit is extrapolated from a second-order centred/RK4 solver, not measured for the paper's Lax-Wendroff implementation.
 
-At this spacing the torus step is extrapolated to be 16,505x longer. Multiplying that ratio by the modelled step-rate ratio gives the headline:
+At this spacing the torus step is extrapolated to be 16,505x longer. Multiplying that ratio by the modelled step-rate ratio gives the cost-model throughput ratio against latitude-longitude with no polar filter:
 
 ```math
 \frac{\text{torus simulated time / wall time}}{\text{baseline simulated time / wall time}}
@@ -74,4 +74,4 @@ A whole-latitude filter relaxes the polar restriction but adds non-local communi
 | 480 | 0.718 |
 | 960 | 0.621 |
 
-This comparison assumes the torus time step for both layouts, omits cone-patch overhead and charges at least three CS-3 system latencies per filter step. It does not cost a specific FFT or test the filter's effect on accuracy. One copy saves bandwidth at fine spacing; filter latency limits the coarser cases. The [ratios](../figure-pack/filter_trade.csv) have a different denominator from the polar-limited headline and cannot be combined with it.
+This comparison assumes the torus time step for both layouts, omits cone-patch overhead and charges at least three CS-3 system latencies per filter step. It does not cost a specific FFT or test the filter's effect on accuracy. One copy saves bandwidth at fine spacing; filter latency limits the coarser cases. The [ratios](../figure-pack/filter_trade.csv) have a different denominator from the cost-model comparison against latitude-longitude with no polar filter and cannot be combined with it.
